@@ -4,7 +4,7 @@ import logger from '../utils/logger';
 import { MESSAGES } from '../config/constants';
 import './TheatreWorks.css';
 
-const TheatreWorks = ({ works }) => {
+const TheatreWorks = ({ works = [] }) => {
   const [currentWorkIndex, setCurrentWorkIndex] = useState(0);
   const [currentGifIndex, setCurrentGifIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -16,6 +16,20 @@ const TheatreWorks = ({ works }) => {
   
   const audioRef = useRef(null);
   const videoRef = useRef(null);
+  
+  // Verificar que works existe y tiene elementos
+  if (!works || works.length === 0) {
+    return (
+      <div className="theatre-works">
+        <div className="work-container">
+          <div className="work-header">
+            <h1 className="work-title">No works available</h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
   const currentWork = works[currentWorkIndex];
 
   // Manejar navegación entre obras
