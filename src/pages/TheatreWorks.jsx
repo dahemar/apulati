@@ -31,6 +31,10 @@ const TheatreWorks = ({ works = [] }) => {
   }
   
   const currentWork = works[currentWorkIndex];
+  
+  // Debug: Log current work and video path
+  console.log('Current work:', currentWork);
+  console.log('Current video path:', currentWork?.gifs?.[currentGifIndex]);
 
   // Manejar navegación entre obras
   const goToPreviousWork = () => {
