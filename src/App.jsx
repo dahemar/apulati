@@ -19,9 +19,12 @@ const theatreWorks = [
 ];
 
 function App() {
-  return (
-    <div className="App">
-              <nav className="main-nav">
+  try {
+    console.log('App rendering, theatreWorks:', theatreWorks);
+    
+    return (
+      <div className="App">
+        <nav className="main-nav">
           <div className="nav-container">
             <div className="nav-links">
               <Link to="/" className="nav-link">Sound Design for Theatre</Link>
@@ -31,15 +34,24 @@ function App() {
           </div>
         </nav>
 
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<TheatreWorks works={theatreWorks} />} />
-          <Route path="/music" element={<Music />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </main>
-    </div>
-  );
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<TheatreWorks works={theatreWorks} />} />
+            <Route path="/music" element={<Music />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </main>
+      </div>
+    );
+  } catch (error) {
+    console.error('Error in App component:', error);
+    return (
+      <div className="App">
+        <h1>Error loading application</h1>
+        <p>Please check the console for details.</p>
+      </div>
+    );
+  }
 }
 
 export default App;
