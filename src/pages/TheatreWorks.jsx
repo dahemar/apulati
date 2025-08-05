@@ -107,6 +107,10 @@ const TheatreWorks = ({ works = [] }) => {
 
   // Cambiar audio y video cuando cambia el índice
   useEffect(() => {
+    console.log('🔄 useEffect triggered - Loading new video/audio');
+    console.log('📹 Video path:', currentWork.gifs[currentGifIndex]);
+    console.log('🎵 Audio path:', currentWork.audio[currentGifIndex]);
+    
     if (audioRef.current && videoRef.current) {
       audioRef.current.src = currentWork.audio[currentGifIndex];
       videoRef.current.src = currentWork.gifs[currentGifIndex];
@@ -153,13 +157,13 @@ const TheatreWorks = ({ works = [] }) => {
   const handleGifLoad = () => {
     const loadTime = Date.now() - (window.gifLoadStartTime || Date.now());
     logger.logGifLoad(currentWork.title, currentGifIndex, loadTime);
-    console.log('Video loaded:', currentWork.gifs[currentGifIndex]);
+    console.log('✅ Video loaded successfully:', currentWork.gifs[currentGifIndex]);
     setIsLoading(false);
   };
 
   // Manejar cuando el video está listo para reproducir
   const handleCanPlay = () => {
-    console.log('Video can play:', currentWork.gifs[currentGifIndex]);
+    console.log('✅ Video can play:', currentWork.gifs[currentGifIndex]);
   };
 
   const handleGifError = (error) => {
