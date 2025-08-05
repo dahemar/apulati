@@ -53,32 +53,32 @@ export const MEDIA_PATHS = {
     title: 'Concours de Larmes',
     author: 'Marvin M_Toumo',
     gifs: [
-      '/assets/Concours de Larmes - Marvin M_Toumo/Video/Elie Concours 1.mp4',
-      '/assets/Concours de Larmes - Marvin M_Toumo/Video/Elie Concours 2.mp4',
-      '/assets/Concours de Larmes - Marvin M_Toumo/Video/Elie Concours 3.mp4'
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif'
     ],
     audio: [
-      '/assets/Concours de Larmes - Marvin M_Toumo/Audio/Elie Concours 1.wav',
-      '/assets/Concours de Larmes - Marvin M_Toumo/Audio/Elie Concours 2.wav',
-      '/assets/Concours de Larmes - Marvin M_Toumo/Audio/Elie Concours 3.wav'
+      '/assets/audio/Elie Concours 1.mp3',
+      '/assets/audio/Elie Concours 2.mp3',
+      '/assets/audio/Elie Concours 3.mp3'
     ]
   },
   QUI_A_PEUR: {
     title: 'Qui a Peur',
     author: 'Davide-Christelle Sanvee',
     gifs: [
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Video/1.Lamp 1.mp4',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Video/2.Siffle 1.mp4',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Video/3.Baldwin 1.mp4',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Video/4.Shepperd 1.mp4',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Video/5.Hand 1.mp4'
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif'
     ],
     audio: [
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Audio/1.Lamp 1.wav',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Audio/2.Siffle.wav',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Audio/3.Baldwin 1.wav',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Audio/4.Shepperd 1.wav',
-      '/assets/Qui a Peur - Davide-Christelle Sanvee/Audio/5.Hand 1.wav'
+      '/assets/audio/1.Lamp 1.mp3',
+      '/assets/audio/2.Siffle.mp3',
+      '/assets/audio/3.Baldwin 1.mp3',
+      '/assets/audio/4.Shepperd 1.mp3',
+      '/assets/audio/5.Hand 1.mp3'
     ]
   }
 };
