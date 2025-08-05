@@ -53,9 +53,9 @@ export const MEDIA_PATHS = {
     title: 'Concours de Larmes',
     author: 'Marvin M_Toumo',
     gifs: [
-      '/assets/videos/Elie Concours 1.mp4',
-      '/assets/videos/Elie Concours 2.mp4',
-      '/assets/videos/Elie Concours 3.mp4'
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif'
     ],
     audio: [
       '/assets/audio/Elie Concours 1.mp3',
@@ -67,11 +67,11 @@ export const MEDIA_PATHS = {
     title: 'Qui a Peur',
     author: 'Davide-Christelle Sanvee',
     gifs: [
-      '/assets/videos/1.Lamp 1.mp4',
-      '/assets/videos/2.Siffle 1.mp4',
-      '/assets/videos/3.Baldwin 1.mp4',
-      '/assets/videos/4.Shepperd 1.mp4',
-      '/assets/videos/5.Hand 1.mp4'
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif',
+      '/assets/images/placeholder.gif'
     ],
     audio: [
       '/assets/audio/1.Lamp 1.mp3',
