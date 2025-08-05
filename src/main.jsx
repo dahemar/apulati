@@ -1,13 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 // import './index.css' // Eliminado para evitar conflictos de estilos
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <HashRouter>
+    <BrowserRouter basename="/apulati/">
       <App />
-    </HashRouter>
+    </BrowserRouter>
   </StrictMode>,
 )
