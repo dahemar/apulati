@@ -53,32 +53,32 @@ export const MEDIA_PATHS = {
     title: 'Concours de Larmes',
     author: 'Marvin M_Toumo',
     gifs: [
-      '/apulati/assets/videos/Elie Concours 1.mp4',
-      '/apulati/assets/videos/Elie Concours 2.mp4',
-      '/apulati/assets/videos/Elie Concours 3.mp4'
+      './assets/videos/Elie Concours 1.mp4',
+      './assets/videos/Elie Concours 2.mp4',
+      './assets/videos/Elie Concours 3.mp4'
     ],
     audio: [
-      '/apulati/assets/audio/Elie Concours 1.mp3',
-      '/apulati/assets/audio/Elie Concours 2.mp3',
-      '/apulati/assets/audio/Elie Concours 3.mp3'
+      './assets/audio/Elie Concours 1.mp3',
+      './assets/audio/Elie Concours 2.mp3',
+      './assets/audio/Elie Concours 3.mp3'
     ]
   },
   QUI_A_PEUR: {
     title: 'Qui a Peur',
     author: 'Davide-Christelle Sanvee',
     gifs: [
-      '/apulati/assets/videos/1.Lamp 1.mp4',
-      '/apulati/assets/videos/2.Siffle 1.mp4',
-      '/apulati/assets/videos/3.Baldwin 1.mp4',
-      '/apulati/assets/videos/4.Shepperd 1.mp4',
-      '/apulati/assets/videos/5.Hand 1.mp4'
+      './assets/videos/1.Lamp 1.mp4',
+      './assets/videos/2.Siffle 1.mp4',
+      './assets/videos/3.Baldwin 1.mp4',
+      './assets/videos/4.Shepperd 1.mp4',
+      './assets/videos/5.Hand 1.mp4'
     ],
     audio: [
-      '/apulati/assets/audio/1.Lamp 1.mp3',
-      '/apulati/assets/audio/2.Siffle.mp3',
-      '/apulati/assets/audio/3.Baldwin 1.mp3',
-      '/apulati/assets/audio/4.Shepperd 1.mp3',
-      '/apulati/assets/audio/5.Hand 1.mp3'
+      './assets/audio/1.Lamp 1.mp3',
+      './assets/audio/2.Siffle.mp3',
+      './assets/audio/3.Baldwin 1.mp3',
+      './assets/audio/4.Shepperd 1.mp3',
+      './assets/audio/5.Hand 1.mp3'
     ]
   }
 };
