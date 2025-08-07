@@ -47,8 +47,25 @@ export const APP_CONFIG = {
   }
 };
 
-// Rutas de archivos multimedia
-export const MEDIA_PATHS = {
+// Función para generar rutas correctas según el entorno
+export const getAssetPath = (path) => {
+  // En desarrollo, usar ruta relativa simple
+  if (import.meta.env.DEV) {
+    return path.startsWith('./') ? path : `./${path}`;
+  }
+  
+  // En producción, usar import de Vite para URLs correctas
+  if (path.startsWith('./assets/')) {
+    // Construir ruta absoluta para producción
+    const cleanPath = path.replace('./', '/');
+    return import.meta.env.BASE_URL + cleanPath.substring(1);
+  }
+  
+  return path;
+};
+
+// Rutas de archivos multimedia (rutas base sin procesamiento)
+const MEDIA_PATHS_RAW = {
   CONCOURS_DE_LARMES: {
     title: 'Concours de Larmes',
     author: 'Marvin M_Toumo',
@@ -97,6 +114,22 @@ export const MEDIA_PATHS = {
     ]
   }
 };
+
+// Función para procesar las rutas multimedia
+const processMediaPaths = (rawPaths) => {
+  const processed = {};
+  for (const [key, work] of Object.entries(rawPaths)) {
+    processed[key] = {
+      ...work,
+      gifs: work.gifs.map(path => getAssetPath(path)),
+      audio: work.audio.map(path => getAssetPath(path))
+    };
+  }
+  return processed;
+};
+
+// Rutas procesadas para uso en la aplicación
+export const MEDIA_PATHS = processMediaPaths(MEDIA_PATHS_RAW);
 
 // Mensajes de la aplicación
 export const MESSAGES = {
