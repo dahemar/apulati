@@ -53,7 +53,7 @@
 /* When credits panel is visible, video section takes 80% */
 .viewer-container.credits-visible .video-section {
   width: 80vw; /* 80% del viewport width para que no se superponga con el panel fijo */
-  padding: 2rem; /* Mantener padding interno */
+  padding: 0; /* Sin padding para maximizar el espacio */
   box-sizing: border-box; /* Incluir padding en las dimensiones */
 }
 
