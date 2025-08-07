@@ -29,11 +29,12 @@
   padding: 0 2rem; /* 32px padding lateral */
   box-sizing: border-box;
   background-color: #1a1a1a;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, padding 0.3s ease;
 }
 
 .video-section.full-width {
   width: 100vw;
+  padding: 0 2rem; /* 32px padding lateral cuando no hay créditos */
 }
 
 /* Hide scrollbars but allow scrolling */
@@ -44,6 +45,11 @@
 
 .video-section::-webkit-scrollbar {
   display: none;
+}
+
+/* When credits panel is visible, remove right padding */
+.viewer-container.credits-visible .video-section {
+  padding: 0 2rem 0 2rem; /* Solo padding izquierdo cuando hay créditos */
 }
 
 /* Responsive layout for mobile */
