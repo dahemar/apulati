@@ -39,11 +39,27 @@ jobs:
           NODE_ENV: production
           GITHUB_PAGES: true
           
-      - name: Remove conflicting index.html from root
+      - name: Prepare GitHub Pages deployment
         run: |
-          echo "🗑️ Removing root index.html to avoid conflicts"
-          rm -f index.html
-          echo "✅ Root index.html removed"
+          echo "🧹 Preparing GitHub Pages deployment structure"
+          
+          # Create clean deployment structure
+          mkdir -p github-pages-deploy
+          
+          # Copy built application to /apulati/ subdirectory
+          mkdir -p github-pages-deploy/apulati
+          cp -r dist/* github-pages-deploy/apulati/
+          
+          # Add redirect index.html to root
+          cp redirect-index.html github-pages-deploy/index.html
+          
+          # Verify deployment structure
+          echo "📁 Deployment structure:"
+          find github-pages-deploy -type f | head -20
+          echo "📄 Root index.html (redirect):"
+          cat github-pages-deploy/index.html
+          echo "📄 App index.html:"
+          cat github-pages-deploy/apulati/index.html | head -10
           
       - name: List build output
         run: |
@@ -71,7 +87,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: github-pages-deploy
 
   deploy:
     environment:
