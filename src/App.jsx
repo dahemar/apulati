@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Music from './pages/Music';
 import TheatreWorks from './pages/TheatreWorks';
 import Contact from './pages/Contact';
@@ -23,16 +23,14 @@ const theatreWorks = [
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<TheatreWorks works={theatreWorks} />} />
-          <Route path="/music" element={<Music />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/debug" element={<SimpleVideoTest />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<TheatreWorks works={theatreWorks} />} />
+        <Route path="/music" element={<Music />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/debug" element={<SimpleVideoTest />} />
+      </Routes>
+    </div>
   );
 }
 
