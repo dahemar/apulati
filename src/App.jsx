@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import Music from './pages/Music';
 import TheatreWorks from './pages/TheatreWorks';
 import Contact from './pages/Contact';
@@ -24,12 +24,24 @@ const theatreWorks = [
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<TheatreWorks works={theatreWorks} />} />
-        <Route path="/music" element={<Music />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/debug" element={<SimpleVideoTest />} />
-      </Routes>
+      <nav className="main-nav">
+        <div className="nav-container">
+          <div className="nav-links">
+            <Link to="/" className="nav-link">Sound Design for Theatre</Link>
+            <Link to="/music" className="nav-link">Music</Link>
+            <Link to="/contact" className="nav-link">Contact</Link>
+          </div>
+        </div>
+      </nav>
+
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<TheatreWorks works={theatreWorks} />} />
+          <Route path="/music" element={<Music />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/debug" element={<SimpleVideoTest />} />
+        </Routes>
+      </main>
     </div>
   );
 }
