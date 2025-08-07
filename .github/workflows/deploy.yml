@@ -40,7 +40,13 @@ jobs:
           GITHUB_PAGES: true
           
       - name: List build output
-        run: ls -la dist/
+        run: |
+          echo "📁 Build directory contents:"
+          ls -la dist/
+          echo "📄 Generated index.html:"
+          cat dist/index.html
+          echo "🔍 Checking for main.jsx references:"
+          grep -n "main.jsx" dist/index.html || echo "✅ No main.jsx references found (this is expected)"
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
