@@ -82,7 +82,7 @@ const MEDIA_PATHS_RAW = {
     credits: {
       direction: 'Davide-Christelle Sanvee',
       acting: 'Davide-Christelle Sanvee, Steven Schoch',
-      video: 'Délan Kéeliç',
+      video: 'Dîlan Kîliç',
       light: 'Florian Bach, Luis Henkes',
       costumes: 'Marie Schaller',
       videoProduction: 'Raphaël Piguet'

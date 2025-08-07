@@ -38,11 +38,11 @@ const TheatreWorks = ({ works = [] }) => {
         { role: 'Make-up', name: 'Cham Vischel' }
       ] : [
         { role: 'Direction', name: 'Davide-Christelle Sanvee' },
-        { role: 'Acting/Performance', name: 'Davide-Christelle Sanvee' },
-        { role: 'Video', name: 'Davide-Christelle Sanvee' },
-        { role: 'Light', name: 'Davide-Christelle Sanvee' },
-        { role: 'Costumes', name: 'Davide-Christelle Sanvee' },
-        { role: 'Make-up', name: 'Davide-Christelle Sanvee' }
+        { role: 'Acting/Performance', name: 'Davide-Christelle Sanvee, Steven Schoch' },
+        { role: 'Video', name: 'Dîlan Kîliç' },
+        { role: 'Light', name: 'Florian Bach, Luis Henkes' },
+        { role: 'Costumes', name: 'Marie Schaller' },
+        { role: 'Video production', name: 'Raphaël Piguet' }
       ]
     }));
   }, [works]);
