@@ -25,6 +25,8 @@ const TheatreWorks = ({ works = [] }) => {
       scenes: work.gifs ? work.gifs.map((gif, index) => {
         const scene = {
           video: gif,
+          webm: work.webm ? work.webm[index] : null,
+          ogv: work.ogv ? work.ogv[index] : null,
           audio: work.audio ? work.audio[index] : null
         };
         console.log(`  Scene ${index}:`, scene);

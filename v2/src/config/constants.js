@@ -70,6 +70,16 @@ const MEDIA_PATHS_RAW = {
       './assets/videos/Elie Concours 2.mp4',
       './assets/videos/Elie Concours 3.mp4'
     ],
+    webm: [
+      './assets/videos/webm/Elie Concours 1.webm',
+      './assets/videos/webm/Elie Concours 2.webm',
+      './assets/videos/webm/Elie Concours 3.webm'
+    ],
+    ogv: [
+      './assets/videos/ogv/Elie Concours 1.ogv',
+      './assets/videos/ogv/Elie Concours 2.ogv',
+      './assets/videos/ogv/Elie Concours 3.ogv'
+    ],
     audio: [
       './assets/audio/Elie Concours 1.mp3',
       './assets/audio/Elie Concours 2.mp3',
@@ -93,6 +103,20 @@ const MEDIA_PATHS_RAW = {
       './assets/videos/3.Baldwin 1.mp4',
       './assets/videos/4.Shepperd 1.mp4',
       './assets/videos/5.Hand 1.mp4'
+    ],
+    webm: [
+      './assets/videos/webm/1.Lamp 1.webm',
+      './assets/videos/webm/2.Siffle 1.webm',
+      './assets/videos/webm/3.Baldwin 1.webm',
+      './assets/videos/webm/4.Shepperd 1.webm',
+      './assets/videos/webm/5.Hand 1.webm'
+    ],
+    ogv: [
+      './assets/videos/ogv/1.Lamp 1.ogv',
+      './assets/videos/ogv/2.Siffle 1.ogv',
+      './assets/videos/ogv/3.Baldwin 1.ogv',
+      './assets/videos/ogv/4.Shepperd 1.ogv',
+      './assets/videos/ogv/5.Hand 1.ogv'
     ],
     audio: [
       './assets/audio/1.Lamp 1.mp3',
