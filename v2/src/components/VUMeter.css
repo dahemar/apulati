@@ -1,0 +1,50 @@
+.vu-meter {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: calc(20vw - 4rem); /* Ancho del panel de créditos menos padding */
+  display: flex;
+  gap: 10px; /* Espacio entre VU meter y waveform */
+  align-items: flex-end; /* Alinear en la parte inferior */
+  justify-content: center; /* Centrar horizontalmente */
+  z-index: 1600; /* Por encima del panel de créditos pero debajo del menú */
+}
+
+.vu-canvas {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  width: 20px;
+  height: 150px;
+}
+
+.waveform-canvas {
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  width: 200px;
+  height: 60px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vu-meter {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    width: calc(100vw - 2rem); /* Ancho completo menos margin */
+    gap: 5px; /* Menor espacio en móvil */
+  }
+  
+  .vu-canvas {
+    width: 15px;
+    height: 100px;
+  }
+  
+  .waveform-canvas {
+    width: 150px;
+    height: 45px;
+  }
+} 

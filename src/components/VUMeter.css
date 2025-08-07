@@ -1,0 +1,59 @@
+.vu-meter {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: calc(20% - 4rem); /* Ancho del panel de créditos menos padding */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrar horizontalmente */
+  gap: 10px;
+  z-index: 1600; /* Por encima del panel de créditos */
+  overflow: visible;
+}
+
+.vu-canvas {
+  display: block;
+  border: none;
+  background: transparent;
+  width: 30px;
+  height: 100px;
+  min-width: 30px;
+  min-height: 100px;
+}
+
+.waveform-canvas {
+  display: block;
+  border: none;
+  background: transparent;
+  width: 150px;
+  height: 80px;
+  min-width: 150px;
+  min-height: 80px;
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vu-meter {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    width: calc(100vw - 2rem); /* Ancho completo menos margin */
+  }
+  
+  .vu-canvas {
+    width: 20px;
+    height: 60px;
+    min-width: 20px;
+    min-height: 60px;
+  }
+  
+  .waveform-canvas {
+    width: 120px;
+    height: 50px;
+    min-width: 120px;
+    min-height: 50px;
+  }
+} 

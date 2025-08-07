@@ -48,11 +48,11 @@ body {
   background-color: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 2000;
-  height: 80px;
-  padding: 1.5rem 0;
+  z-index: 2000; /* Aumentado para estar por encima de todo */
+  padding: 1.5rem 0; /* Aumentado el padding para más altura */
   margin: 0;
   box-sizing: border-box;
+  height: 80px; /* Altura aumentada del menú */
 }
 
 .nav-container {
@@ -115,7 +115,7 @@ body {
 
 /* Contenido principal */
 .main-content {
-  padding-top: 80px;
+  padding-top: 80px; /* Igual a la nueva altura del menú */
   min-height: calc(100vh - 80px);
 }
 

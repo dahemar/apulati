@@ -1,0 +1,175 @@
+.scene-grid {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scene-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.works-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.work-row {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.work-row.current-work {
+  height: 65%;
+  opacity: 1;
+  z-index: 100;
+}
+
+.work-row.next-work {
+  height: 35%;
+  opacity: 0.7;
+  z-index: 50;
+}
+
+.work-row.prev-work {
+  height: 35%;
+  opacity: 0.7;
+  z-index: 50;
+}
+
+.work-row.hidden-work {
+  display: none;
+}
+
+.work-header {
+  padding: 1rem 0;
+}
+
+.work-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+  text-align: left;
+}
+
+.scenes-container {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scenes-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scene-item {
+  position: relative;
+  width: 320px;
+  height: 200px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scene-item:hover {
+  filter: brightness(1.15);
+}
+
+.scene-item.active {
+  border: 3px solid #4A90E2;
+  filter: brightness(1.25);
+}
+
+/* Removed - blur is now handled dynamically via inline styles */
+
+.scene-item.hovered {
+  filter: brightness(1.15);
+  box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+}
+
+.scene-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.play-pause-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: none !important;
+  color: #4A90E2;
+  border: none !important;
+  font-size: 2.5rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 15;
+  filter: none;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.scene-item:hover .play-pause-button {
+  opacity: 1;
+}
+
+.play-pause-button:hover {
+  transform: translate(-50%, -50%);
+  filter: none;
+}
+
+.play-pause-button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: none !important;
+}
+
+@media (max-width: 768px) {
+  .work-row.current-work {
+    height: 80%;
+  }
+  
+  .work-row.next-work,
+  .work-row.prev-work {
+    height: 20%;
+  }
+  
+  .scene-item {
+    width: 240px;
+    height: 150px;
+  }
+  
+  .scenes-container {
+    gap: 1rem;
+    padding: 0.5rem 0;
+  }
+  
+  .work-title {
+    font-size: 1.2rem;
+  }
+} 

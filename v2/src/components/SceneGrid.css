@@ -1,0 +1,299 @@
+.scene-grid {
+  width: 100%;
+  height: 100%;
+  min-height: 100%; /* Ensure it fills at least the full height */
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* Changed from hidden to allow vertical scroll */
+  position: relative; /* Added for proper event handling */
+  /* Debug styles */
+  pointer-events: auto; /* Ensure events are captured */
+  flex: 1; /* Take up all available space in the flex container */
+  margin: 0; /* Sin margen */
+  padding: 0; /* Sin padding interno */
+  box-sizing: border-box;
+}
+
+.works-container {
+  width: 100%;
+  height: 100%;
+  min-height: 100%; /* Ensure it fills at least the full height */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible; /* Changed from hidden to allow vertical scroll */
+  pointer-events: auto; /* Ensure events are captured */
+  flex: 1; /* Take up all available space in the flex container */
+  margin: 0; /* Sin margen */
+  padding: 0; /* Sin padding interno */
+  box-sizing: border-box;
+}
+
+.work-row {
+  width: 100%;
+  height: 50%; /* Default, will be overridden by current/next */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative; /* Added for z-index context */
+  transition: all 0.3s ease; /* Smooth transition for vertical movement */
+  overflow: visible; /* Allow content to overflow for scrolling */
+}
+
+.work-row.current-work {
+  height: 65%; /* Reduced from 70% to bring rows closer */
+  transform: translateY(0);
+  z-index: 2;
+  opacity: 1;
+}
+
+.work-row.next-work {
+  height: 35%; /* Increased from 30% to bring rows closer */
+  transform: translateY(0);
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.work-row.prev-work {
+  height: 0%;
+  transform: translateY(-100%); /* Moves it completely out of view above */
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none; /* Disables interaction when hidden */
+}
+
+.scenes-container {
+  display: flex;
+  gap: 1.5rem; /* Increased gap for larger thumbnails */
+  padding: 1.5rem; /* Increased padding */
+  overflow-x: auto; /* Ensure horizontal scroll is enabled */
+  overflow-y: hidden; /* Prevent vertical scroll within scenes container */
+  scroll-behavior: smooth;
+  height: 100%; /* Occupy full height of work-row */
+  align-items: center;
+  /* Ocultar scrollbar */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  /* Debug styles */
+  min-width: 0; /* Allow flex items to shrink */
+  flex-shrink: 1; /* Allow container to shrink */
+}
+
+.scenes-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Ensure scenes can scroll horizontally */
+.scene-item {
+  flex-shrink: 0; /* Prevent shrinking */
+  width: 320px; /* Increased from 280px */
+  height: 200px; /* Increased from 180px */
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+.scene-item:hover {
+  filter: brightness(1.2);
+  z-index: 10;
+}
+
+.scene-item.active {
+  border: 3px solid #ffffff;
+  filter: brightness(1.3);
+  z-index: 20;
+}
+
+.scene-item.hovered:not(.active) {
+  filter: brightness(1.1);
+  z-index: 5;
+}
+
+.scene-video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.scene-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+/* Estado inicial con blur suave */
+.scene-item.initial-blur .scene-video {
+  filter: blur(2px) brightness(0.7);
+}
+
+/* Escenas de la obra actual */
+.work-row.current-work .scene-item:not(.active) .scene-video {
+  filter: blur(4px) brightness(0.4);
+}
+
+.work-row.current-work .scene-item.active .scene-video {
+  filter: none;
+}
+
+.work-row.current-work .scene-item.hovered:not(.active) .scene-video {
+  filter: blur(2px) brightness(0.6);
+}
+
+/* Escenas de la siguiente obra */
+.work-row.next-work .scene-video {
+  filter: blur(4px) brightness(0.4);
+}
+
+.work-row.next-work .scene-item:hover .scene-video {
+  filter: blur(2px) brightness(0.6);
+}
+
+/* Overlay para escena activa */
+.active-scene-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.scene-item.active:hover .active-scene-overlay {
+  opacity: 1;
+}
+
+.play-pause-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #4A90E2;
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none !important;
+  pointer-events: auto;
+  outline: none !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  z-index: 15;
+  visibility: hidden !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.play-pause-button:hover {
+  transform: translate(-50%, -50%);
+}
+
+/* REGLA GLOBAL: Solo aparecer en hover del contenedor del vídeo */
+.scene-item:hover .play-pause-button {
+  opacity: 1 !important; /* Forzar visibilidad solo en hover */
+  visibility: visible !important; /* Doble seguridad - también visible con visibility */
+}
+
+.play-pause-button:focus,
+.play-pause-button:focus-visible,
+.play-pause-button:active,
+.play-pause-button[role="button"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Icono de Play - Triángulo CSS */
+.play-icon {
+  width: 0;
+  height: 0;
+  border-left: 20px solid #4A90E2;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  margin-left: 4px; /* Pequeño ajuste para centrar visualmente */
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  pointer-events: none !important;
+}
+
+/* Icono de Pause - Dos barras CSS */
+.pause-icon {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  pointer-events: none !important;
+}
+
+.pause-bar {
+  width: 6px;
+  height: 24px;
+  background-color: #4A90E2;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  pointer-events: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .work-row.current-work {
+    height: 60%;
+  }
+
+  .work-row.next-work {
+    height: 40%;
+  }
+
+  .scenes-container {
+    gap: 0.8rem; /* Reduced gap for mobile */
+    padding: 0.8rem; /* Reduced padding for mobile */
+  }
+
+  .scene-item {
+    width: 240px; /* Adjusted for mobile but still larger than before */
+    height: 150px; /* Adjusted for mobile but still larger than before */
+  }
+} 
+
+/* REGLA ULTRA-ESPECÍFICA: Sobrescribir cualquier otra regla */
+.scene-grid .works-container .work-row .scenes-container .scene-item .scene-video-container .play-pause-button,
+.scene-item .play-pause-button,
+button.play-pause-button {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  display: block !important; /* Asegurar que está en el DOM */
+}
+
+/* REGLA ULTRA-ESPECÍFICA: Solo visible en hover */
+.scene-grid .works-container .work-row .scenes-container .scene-item:hover .scene-video-container .play-pause-button,
+.scene-item:hover .play-pause-button,
+.scene-item:hover button.play-pause-button {
+  opacity: 1 !important;
+  visibility: visible !important;
+} 

@@ -1,22 +1,69 @@
-import React, { useState, useEffect, useRef } from 'react';
-import LazyImage from '../components/LazyImage';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import SceneGrid from '../components/SceneGrid';
+import CreditsPanel from '../components/CreditsPanel';
+import VUMeter from '../components/VUMeter';
 import logger from '../utils/logger';
-import { MESSAGES } from '../config/constants';
 import './TheatreWorks.css';
 
 const TheatreWorks = ({ works = [] }) => {
   const [currentWorkIndex, setCurrentWorkIndex] = useState(0);
-  const [currentGifIndex, setCurrentGifIndex] = useState(0);
+  const [currentSceneIndex, setCurrentSceneIndex] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [gifShouldPlay, setGifShouldPlay] = useState(false);
-  const [hasUserClicked, setHasUserClicked] = useState(false);
-  const [gifKey, setGifKey] = useState(0);
-  const [playState, setPlayState] = useState(0);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   
   const audioRef = useRef(null);
-  const videoRef = useRef(null);
-  
+  const videoSectionRef = useRef(null);
+  const isMountedRef = useRef(true);
+
+  // Transform works data to include scenes
+  const transformedWorks = useMemo(() => {
+    if (!works || works.length === 0) return [];
+    
+    console.log('🔄 Transforming works data...');
+    return works.map(work => ({
+      ...work,
+      scenes: work.gifs ? work.gifs.map((gif, index) => {
+        const scene = {
+          video: gif,
+          audio: work.audio ? work.audio[index] : null
+        };
+        console.log(`  Scene ${index}:`, scene);
+        return scene;
+      }) : [],
+      credits: work.title === 'Concours de Larmes' ? [
+        { role: 'Direction', name: 'Marvin M\'Toumo' },
+        { role: 'Acting/Performance', name: 'Elie Autins' },
+        { role: 'Light', name: 'Alessandra Domingues' },
+        { role: 'Costumes', name: 'Marie Schaller' },
+        { role: 'Make-up', name: 'Cham Vischel' }
+      ] : [
+        { role: 'Direction', name: 'Davide-Christelle Sanvee' },
+        { role: 'Acting/Performance', name: 'Davide-Christelle Sanvee' },
+        { role: 'Video', name: 'Davide-Christelle Sanvee' },
+        { role: 'Light', name: 'Davide-Christelle Sanvee' },
+        { role: 'Costumes', name: 'Davide-Christelle Sanvee' },
+        { role: 'Make-up', name: 'Davide-Christelle Sanvee' }
+      ]
+    }));
+  }, [works]);
+
+  console.log('📊 Transformed works:', transformedWorks);
+
+  // Cleanup function to mark component as unmounted
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Function to safely update state only if component is still mounted
+  const safeSetState = (setter, value) => {
+    if (isMountedRef.current) {
+      setter(value);
+    }
+  };
+
   // Verificar que works existe y tiene elementos
   if (!works || works.length === 0) {
     return (
@@ -30,241 +77,199 @@ const TheatreWorks = ({ works = [] }) => {
     );
   }
   
-  const currentWork = works[currentWorkIndex];
+  const currentWork = transformedWorks[currentWorkIndex];
 
-  // Manejar navegación entre obras
-  const goToPreviousWork = () => {
-    const newIndex = currentWorkIndex === 0 ? works.length - 1 : currentWorkIndex - 1;
-    logger.logNavigation(currentWork.title, works[newIndex].title);
-    setCurrentWorkIndex(newIndex);
-    setCurrentGifIndex(0);
-    setIsPlaying(false);
-    setHasUserClicked(false);
-    setGifKey(0);
+  // Handle scene changes
+  const handleSceneChange = (sceneIndex) => {
+    console.log('🎬 Scene change requested:', sceneIndex, 'current:', currentSceneIndex);
+    safeSetState(setCurrentSceneIndex, sceneIndex);
+    safeSetState(setHasUserInteracted, true);
   };
 
-  const goToNextWork = () => {
-    const newIndex = currentWorkIndex === works.length - 1 ? 0 : currentWorkIndex + 1;
-    logger.logNavigation(currentWork.title, works[newIndex].title);
-    setCurrentWorkIndex(newIndex);
-    setCurrentGifIndex(0);
-    setIsPlaying(false);
-    setHasUserClicked(false);
-    setGifKey(0);
+  // Handle play/pause with proper synchronization
+  const handlePlayPause = () => {
+    console.log('⏯️ Play/Pause requested, current state:', isPlaying);
+    safeSetState(setIsPlaying, !isPlaying);
   };
 
-  // Manejar navegación entre videos
-  const goToPreviousGif = () => {
-    setCurrentGifIndex(prev => prev === 0 ? currentWork.gifs.length - 1 : prev - 1);
-    setHasUserClicked(true);
-    setGifKey(prev => prev + 1);
-    setPlayState(prev => prev + 1);
+  // Handle work change
+  const handleWorkChange = (workIndex) => {
+    console.log('🔄 Work change requested:', workIndex, 'from:', currentWorkIndex);
     
-    // Iniciar reproducción automáticamente
-    setTimeout(() => {
-      if (audioRef.current && videoRef.current) {
-        audioRef.current.play();
-        videoRef.current.play();
-        setIsPlaying(true);
-        setGifShouldPlay(true);
-      }
-    }, 100);
-  };
-
-  const goToNextGif = () => {
-    setCurrentGifIndex(prev => prev === currentWork.gifs.length - 1 ? 0 : prev + 1);
-    setHasUserClicked(true);
-    setGifKey(prev => prev + 1);
-    setPlayState(prev => prev + 1);
-    
-    // Iniciar reproducción automáticamente
-    setTimeout(() => {
-      if (audioRef.current && videoRef.current) {
-        audioRef.current.play();
-        videoRef.current.play();
-        setIsPlaying(true);
-        setGifShouldPlay(true);
-      }
-    }, 100);
-  };
-
-  // Manejar reproducción/pausa de audio y video
-  const handlePlayClick = () => {
-    if (audioRef.current && videoRef.current) {
-      setHasUserClicked(true);
-      if (isPlaying) {
-        audioRef.current.pause();
-        videoRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        videoRef.current.play();
-        setIsPlaying(true);
-        setGifShouldPlay(true);
-      }
-    }
-  };
-
-  // Cambiar audio y video cuando cambia el índice
-  useEffect(() => {
-    console.log('🔄 useEffect triggered - Loading new video/audio');
-    console.log('📹 Video path:', currentWork.gifs[currentGifIndex]);
-    console.log('🎵 Audio path:', currentWork.audio[currentGifIndex]);
-    
-    if (audioRef.current && videoRef.current) {
-      audioRef.current.src = currentWork.audio[currentGifIndex];
-      videoRef.current.src = currentWork.gifs[currentGifIndex];
-      audioRef.current.load();
-      videoRef.current.load();
-      // Pausar automáticamente cuando cambia
-      if (isPlaying) {
-        audioRef.current.pause();
-        videoRef.current.pause();
-        setIsPlaying(false);
-      }
-    }
-  }, [currentGifIndex, currentWork]);
-
-  // Medir tiempo de carga de GIFs
-  useEffect(() => {
-    window.gifLoadStartTime = Date.now();
-  }, [currentGifIndex, currentWorkIndex]);
-
-  // Resetear cuando cambia la obra
-  useEffect(() => {
-    if (audioRef.current && videoRef.current) {
+    // Pause everything before changing work
+    if (audioRef.current) {
       audioRef.current.pause();
-      videoRef.current.pause();
       audioRef.current.currentTime = 0;
-      videoRef.current.currentTime = 0;
     }
-    setIsPlaying(false);
-    setHasUserClicked(false);
-    setGifKey(0);
-    setPlayState(0);
-  }, [currentWorkIndex]);
-
-  // Prevenir scroll en la página
-  useEffect(() => {
-    document.body.classList.add('theatre-works-page');
     
-    return () => {
-      document.body.classList.remove('theatre-works-page');
-    };
-  }, []);
-
-  // Manejar carga de video
-  const handleGifLoad = () => {
-    const loadTime = Date.now() - (window.gifLoadStartTime || Date.now());
-    logger.logGifLoad(currentWork.title, currentGifIndex, loadTime);
-    console.log('✅ Video loaded successfully:', currentWork.gifs[currentGifIndex]);
-    setIsLoading(false);
+    safeSetState(setCurrentWorkIndex, workIndex);
+    safeSetState(setCurrentSceneIndex, null);
+    safeSetState(setIsPlaying, false);
+    safeSetState(setHasUserInteracted, false);
   };
 
-  // Manejar cuando el video está listo para reproducir
-  const handleCanPlay = () => {
-    console.log('✅ Video can play:', currentWork.gifs[currentGifIndex]);
+  // Set audio source when scene changes
+  useEffect(() => {
+    if (currentSceneIndex !== null && currentWork?.scenes?.[currentSceneIndex]) {
+      const scene = currentWork.scenes[currentSceneIndex];
+      const audioSrc = scene.audio;
+      
+      if (audioSrc && audioRef.current) {
+        console.log(`🎵 Scene changed - Setting audio source: ${audioSrc} work: ${currentWork.title} scene: ${currentSceneIndex}`);
+        
+        // Pause current audio before changing source
+        if (!audioRef.current.paused) {
+          audioRef.current.pause();
+        }
+        
+        // Set new audio source
+        audioRef.current.src = audioSrc;
+        audioRef.current.load();
+        console.log('🎵 Audio load() called for new source');
+      } else {
+        console.warn('⚠️ No audio source available for scene:', currentSceneIndex);
+      }
+    }
+  }, [currentSceneIndex, currentWork?.title]);
+
+  // Synchronized play/pause function
+  const playMedia = async () => {
+    if (currentSceneIndex === null) return;
+    
+    console.log('🎬 Starting synchronized playback');
+    
+    try {
+      // Resume AudioContext if needed
+      if (window.GLOBAL_AUDIO_CONTEXT && window.GLOBAL_AUDIO_CONTEXT.state === 'suspended') {
+        await window.GLOBAL_AUDIO_CONTEXT.resume();
+        console.log('🎵 AudioContext resumed');
+      }
+      
+      // Play audio first
+      const audio = audioRef.current;
+      if (audio && audio.src) {
+        if (audio.readyState >= 2) {
+          await audio.play();
+          console.log('✅ Audio started successfully');
+        } else {
+          await new Promise((resolve, reject) => {
+            const handleCanPlay = () => {
+              audio.play().then(resolve).catch(reject);
+              audio.removeEventListener('canplay', handleCanPlay);
+            };
+            audio.addEventListener('canplay', handleCanPlay);
+            setTimeout(() => reject(new Error('Audio ready timeout')), 5000);
+          });
+          console.log('✅ Audio started after waiting');
+        }
+      }
+      
+      // Then play video
+      const activeVideo = document.querySelector(`[data-work-index="${currentWorkIndex}"][data-scene-index="${currentSceneIndex}"] video`);
+      if (activeVideo) {
+        if (activeVideo.readyState >= 2) {
+          await activeVideo.play();
+          console.log('✅ Video started successfully');
+        } else {
+          await new Promise((resolve, reject) => {
+            const handleCanPlay = () => {
+              activeVideo.play().then(resolve).catch(reject);
+              activeVideo.removeEventListener('canplay', handleCanPlay);
+            };
+            activeVideo.addEventListener('canplay', handleCanPlay);
+            setTimeout(() => reject(new Error('Video ready timeout')), 5000);
+          });
+          console.log('✅ Video started after waiting');
+        }
+      } else {
+        console.warn('⚠️ Active video not found for work:', currentWorkIndex, 'scene:', currentSceneIndex);
+      }
+      
+      console.log('🎬 Synchronized playback started successfully');
+    } catch (error) {
+      console.error('❌ Error in synchronized playback:', error);
+    }
   };
 
-  const handleGifError = (error) => {
-    logger.logError('VIDEO_LOAD_ERROR', error, {
-      work: currentWork.title,
-      gifIndex: currentGifIndex,
-      gifPath: currentWork.gifs[currentGifIndex]
+  // Synchronized pause function
+  const pauseMedia = () => {
+    console.log('⏸️ Pausing all media');
+    
+    // Pause audio
+    const audio = audioRef.current;
+    if (audio && !audio.paused) {
+      audio.pause();
+      console.log('✅ Audio paused');
+    }
+    
+    // Pause all videos
+    const allVideos = document.querySelectorAll('.scene-item video');
+    allVideos.forEach((video, index) => {
+      if (!video.paused) {
+        video.pause();
+        console.log(`✅ Video ${index} paused`);
+      }
     });
-    console.error('Video load error:', error, currentWork.gifs[currentGifIndex]);
-    setIsLoading(false);
   };
+
+  // Handle play/pause state changes with synchronization
+  useEffect(() => {
+    if (currentSceneIndex !== null) {
+      if (isPlaying) {
+        playMedia();
+      } else {
+        pauseMedia();
+      }
+    }
+  }, [isPlaying, currentSceneIndex]);
 
   return (
     <div className="theatre-works">
-      <div className="work-container">
-        <div className="work-header">
-          <h1 className="work-title">{currentWork.title}</h1>
-          <p className="work-author">by {currentWork.author}</p>
-        </div>
+      <div className="fixed-viewer">
+        <div className={`viewer-container ${hasUserInteracted ? 'credits-visible' : ''}`}>
+          <div className={`video-section ${!hasUserInteracted ? 'full-width' : ''}`} ref={videoSectionRef}>
+            <SceneGrid
+              work={currentWork}
+              currentSceneIndex={currentSceneIndex}
+              onSceneChange={handleSceneChange}
+              isPlaying={isPlaying}
+              onPlayPause={handlePlayPause}
+              allWorks={transformedWorks}
+              currentWorkIndex={currentWorkIndex}
+              onWorkChange={handleWorkChange}
+              audioRef={audioRef}
+            />
+          </div>
 
-        <div className="gif-container">
-          {isLoading && (
-            <div className="loading-overlay">
-              <div className="loading-spinner"></div>
-              <p>{MESSAGES.LOADING}</p>
-            </div>
-          )}
-          
-          <video
-            ref={videoRef}
-            key={`${gifKey}-${playState}`}
-            src={currentWork.gifs[currentGifIndex]}
-            className="theatre-gif"
-            style={{ 
-              filter: isPlaying ? 'none' : 'grayscale(100%) brightness(0.8)'
-            }}
-            onLoadedData={handleGifLoad}
-            onCanPlay={handleCanPlay}
-            onError={handleGifError}
-            muted
-            playsInline
-            loop
-            preload="auto"
+          <CreditsPanel 
+            title={currentWork.title}
+            credits={currentWork.credits}
+            isVisible={hasUserInteracted}
+            audioRef={audioRef}
           />
-
-          <div className="play-overlay" onClick={handlePlayClick}>
-            <div className="play-button">
-              <span>{!hasUserClicked ? 'click to play' : (isPlaying ? '' : '')}</span>
-            </div>
-          </div>
-
-          {/* Flechas laterales */}
-          <button 
-            className="side-nav-button prev-button"
-            onClick={goToPreviousGif}
-            aria-label="Previous scene"
-          >
-            &lt;
-          </button>
           
-          <button 
-            className="side-nav-button next-button"
-            onClick={goToNextGif}
-            aria-label="Next scene"
-          >
-            &gt;
-          </button>
-
-          {/* Contador abajo */}
-          <div className="gif-navigation">
-            <div className="gif-counter">
-              {currentGifIndex + 1} / {currentWork.gifs.length}
-            </div>
-          </div>
+          {hasUserInteracted && (
+            <VUMeter audioRef={audioRef} />
+          )}
         </div>
-
-        <div className="work-navigation">
-          <button 
-            className="work-nav-button prev-work"
-            onClick={goToPreviousWork}
-          >
-            {MESSAGES.PREVIOUS_WORK}
-          </button>
-          
-          <button 
-            className="work-nav-button next-work"
-            onClick={goToNextWork}
-          >
-            {MESSAGES.NEXT_WORK}
-          </button>
-        </div>
-
-        <audio
-          ref={audioRef}
-          loop
-          preload="auto"
-          onEnded={() => {
-            // El audio se reproduce en bucle automáticamente
-          }}
-        />
       </div>
+
+      <audio
+        ref={audioRef}
+        loop
+        preload="auto"
+        onLoadStart={() => console.log('🎵 Audio loadstart')}
+        onCanPlay={() => console.log('🎵 Audio canplay')}
+        onCanPlayThrough={() => console.log('🎵 Audio canplaythrough')}
+        onPlay={() => console.log('🎵 Audio play event fired')}
+        onPause={() => console.log('🎵 Audio pause event fired')}
+        onSuspend={() => console.log('⚠️ Audio suspend')}
+        onError={(e) => console.error('🎵 Audio error:', e)}
+        onEnded={() => console.log('🎵 Audio ended')}
+        onWaiting={() => console.log('🎵 Audio waiting')}
+        onStalled={() => console.log('🎵 Audio stalled')}
+        onAbort={() => console.log('🎵 Audio abort')}
+      />
     </div>
   );
 };
