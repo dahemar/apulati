@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari Video Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .video-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        video {
+            width: 300px;
+            height: 200px;
+            background: #000;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+        .info { background: #2d5a5a; }
+        .log {
+            background: #333;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🍎 Safari Video Test</h1>
+    <p>Testing Safari-specific video compatibility...</p>
+
+    <div class="video-test">
+        <h3>Test 1: Original MP4 (H.264 High 4:4:4)</h3>
+        <video controls id="original-video">
+            <source src="./assets/videos/1.Lamp 1.mp4" type="video/mp4">
+            <p>Original MP4 not supported</p>
+        </video>
+        <div class="status info">⚠️ This should NOT work in Safari</div>
+    </div>
+
+    <div class="video-test">
+        <h3>Test 2: Safari-Compatible MP4 (H.264 High 4:4:4)</h3>
+        <video controls id="safari-video">
+            <source src="./assets/videos/safari/1.Lamp 1.mp4" type="video/mp4">
+            <p>Safari MP4 not supported</p>
+        </video>
+        <div class="status success">✅ This should work in Safari</div>
+    </div>
+
+    <div class="video-test">
+        <h3>Test 3: Multiple Sources (Safari Priority)</h3>
+        <video controls id="multi-video">
+            <source src="./assets/videos/safari/1.Lamp 1.mp4" type="video/mp4">
+            <source src="./assets/videos/webm/1.Lamp 1.webm" type="video/webm">
+            <source src="./assets/videos/ogv/1.Lamp 1.ogv" type="video/ogg">
+            <source src="./assets/videos/1.Lamp 1.mp4" type="video/mp4">
+            <p>No video format supported</p>
+        </video>
+        <div class="status success">✅ Should work in all browsers</div>
+    </div>
+
+    <div class="video-test">
+        <h3>Test 4: Video Info</h3>
+        <div id="video-info" class="log"></div>
+    </div>
+
+    <script>
+        const log = (message) => {
+            const logDiv = document.getElementById('video-info');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        };
+
+        // Test video loading
+        const videos = [
+            { id: 'original-video', name: 'Original MP4' },
+            { id: 'safari-video', name: 'Safari MP4' },
+            { id: 'multi-video', name: 'Multiple Sources' }
+        ];
+
+        videos.forEach((video, index) => {
+            const element = document.getElementById(video.id);
+            
+            element.addEventListener('loadstart', () => {
+                log(`${video.name}: Load started`);
+            });
+            
+            element.addEventListener('canplay', () => {
+                log(`${video.name}: Can play ✅`);
+            });
+            
+            element.addEventListener('canplaythrough', () => {
+                log(`${video.name}: Can play through ✅`);
+            });
+            
+            element.addEventListener('loadedmetadata', () => {
+                log(`${video.name}: Metadata loaded`);
+            });
+            
+            element.addEventListener('error', (e) => {
+                log(`${video.name}: Error ❌ - ${e.target.error ? e.target.error.message : 'Unknown error'}`);
+            });
+
+            element.addEventListener('loadeddata', () => {
+                log(`${video.name}: Data loaded`);
+            });
+
+            // Try to get video info
+            setTimeout(() => {
+                try {
+                    const duration = element.duration;
+                    const currentSrc = element.currentSrc;
+                    log(`${video.name}: Duration=${duration}s, Source=${currentSrc}`);
+                } catch (e) {
+                    log(`${video.name}: Could not get info - ${e.message}`);
+                }
+            }, 2000);
+        });
+
+        // Detect browser
+        const userAgent = navigator.userAgent;
+        log(`Browser: ${userAgent}`);
+        
+        if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+            log('✅ Safari detected');
+        } else if (userAgent.includes('Chrome')) {
+            log('🌐 Chrome detected');
+        } else if (userAgent.includes('Firefox')) {
+            log('🦊 Firefox detected');
+        } else if (userAgent.includes('Opera')) {
+            log('🎭 Opera detected');
+        } else {
+            log('❓ Unknown browser');
+        }
+    </script>
+</body>
+</html> 

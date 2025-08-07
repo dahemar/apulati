@@ -81,9 +81,9 @@ const MEDIA_PATHS_RAW = {
       './assets/videos/ogv/Elie Concours 3.ogv'
     ],
     safari: [
-      './assets/videos/safari/Elie Concours 1.mp4',
-      './assets/videos/safari/Elie Concours 2.mp4',
-      './assets/videos/safari/Elie Concours 3.mp4'
+      './assets/videos/safari-working/Elie Concours 1.mp4',
+      './assets/videos/safari-working/Elie Concours 2.mp4',
+      './assets/videos/safari-working/Elie Concours 3.mp4'
     ],
     audio: [
       './assets/audio/Elie Concours 1.mp3',
@@ -124,11 +124,11 @@ const MEDIA_PATHS_RAW = {
       './assets/videos/ogv/5.Hand 1.ogv'
     ],
     safari: [
-      './assets/videos/safari/1.Lamp 1.mp4',
-      './assets/videos/safari/2.Siffle 1.mp4',
-      './assets/videos/safari/3.Baldwin 1.mp4',
-      './assets/videos/safari/4.Shepperd 1.mp4',
-      './assets/videos/safari/5.Hand 1.mp4'
+      './assets/videos/safari-working/1.Lamp 1.mp4',
+      './assets/videos/safari-working/2.Siffle 1.mp4',
+      './assets/videos/safari-working/3.Baldwin 1.mp4',
+      './assets/videos/safari-working/4.Shepperd 1.mp4',
+      './assets/videos/safari-working/5.Hand 1.mp4'
     ],
     audio: [
       './assets/audio/1.Lamp 1.mp3',
