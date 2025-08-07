@@ -54,7 +54,7 @@ export const getAssetPath = (path) => {
 };
 
 // Rutas de archivos multimedia (rutas base sin procesamiento)
-const MEDIA_PATHS_RAW = {
+export const MEDIA_PATHS_RAW = {
   CONCOURS_DE_LARMES: {
     title: 'Concours de Larmes',
     author: 'Marvin M_Toumo',
