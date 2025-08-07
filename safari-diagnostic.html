@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari Video Diagnostic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        video {
+            width: 300px;
+            height: 200px;
+            background: #000;
+            margin: 10px 0;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+        .info { background: #2d5a5a; }
+        .warning { background: #5a5a2d; }
+        .log {
+            background: #333;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .browser-info {
+            background: #2d2d5a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Safari Video Diagnostic</h1>
+    
+    <div class="browser-info">
+        <h3>🌐 Browser Information</h3>
+        <div id="browser-details"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📹 Test 1: Direct Video Element (No Sources)</h3>
+        <video controls id="direct-video">
+            <p>Direct video test</p>
+        </video>
+        <div class="status info">Testing basic video element functionality</div>
+        <div id="direct-result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📹 Test 2: Original MP4 (H.264 High 4:4:4)</h3>
+        <video controls id="original-video">
+            <source src="./assets/videos/1.Lamp 1.mp4" type="video/mp4">
+            <p>Original MP4 not supported</p>
+        </video>
+        <div class="status warning">This should NOT work in Safari</div>
+        <div id="original-result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📹 Test 3: Safari Working MP4 (H.264 Constrained Baseline)</h3>
+        <video controls id="safari-video">
+            <source src="./assets/videos/safari-working/1.Lamp 1.mp4" type="video/mp4">
+            <p>Safari MP4 not supported</p>
+        </video>
+        <div class="status success">This should work in Safari</div>
+        <div id="safari-result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📹 Test 4: Multiple Sources (Priority Order)</h3>
+        <video controls id="multi-video">
+            <source src="./assets/videos/safari-working/1.Lamp 1.mp4" type="video/mp4">
+            <source src="./assets/videos/webm/1.Lamp 1.webm" type="video/webm">
+            <source src="./assets/videos/ogv/1.Lamp 1.ogv" type="video/ogg">
+            <source src="./assets/videos/1.Lamp 1.mp4" type="video/mp4">
+            <p>No video format supported</p>
+        </video>
+        <div class="status success">Should work in all browsers</div>
+        <div id="multi-result" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📹 Test 5: File Accessibility</h3>
+        <div id="file-test"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 Detailed Log</h3>
+        <div id="detailed-log" class="log"></div>
+    </div>
+
+    <script>
+        const log = (message) => {
+            const logDiv = document.getElementById('detailed-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        };
+
+        const updateResult = (id, message, type = 'info') => {
+            const resultDiv = document.getElementById(id);
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.textContent = message;
+        };
+
+        // Browser detection
+        const userAgent = navigator.userAgent;
+        const browserInfo = document.getElementById('browser-details');
+        
+        let browserName = 'Unknown';
+        let browserVersion = 'Unknown';
+        
+        if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+            browserName = 'Safari';
+            const match = userAgent.match(/Version\/(\d+\.\d+)/);
+            browserVersion = match ? match[1] : 'Unknown';
+        } else if (userAgent.includes('Chrome')) {
+            browserName = 'Chrome';
+            const match = userAgent.match(/Chrome\/(\d+\.\d+)/);
+            browserVersion = match ? match[1] : 'Unknown';
+        } else if (userAgent.includes('Firefox')) {
+            browserName = 'Firefox';
+            const match = userAgent.match(/Firefox\/(\d+\.\d+)/);
+            browserVersion = match ? match[1] : 'Unknown';
+        } else if (userAgent.includes('Opera')) {
+            browserName = 'Opera';
+            const match = userAgent.match(/Opera\/(\d+\.\d+)/);
+            browserVersion = match ? match[1] : 'Unknown';
+        }
+        
+        browserInfo.innerHTML = `
+            <strong>Browser:</strong> ${browserName} ${browserVersion}<br>
+            <strong>User Agent:</strong> ${userAgent}<br>
+            <strong>Platform:</strong> ${navigator.platform}<br>
+            <strong>Language:</strong> ${navigator.language}
+        `;
+        
+        log(`Browser detected: ${browserName} ${browserVersion}`);
+        log(`User Agent: ${userAgent}`);
+
+        // Test video loading
+        const videos = [
+            { id: 'direct-video', name: 'Direct Video', resultId: 'direct-result' },
+            { id: 'original-video', name: 'Original MP4', resultId: 'original-result' },
+            { id: 'safari-video', name: 'Safari MP4', resultId: 'safari-result' },
+            { id: 'multi-video', name: 'Multiple Sources', resultId: 'multi-result' }
+        ];
+
+        videos.forEach((video, index) => {
+            const element = document.getElementById(video.id);
+            
+            element.addEventListener('loadstart', () => {
+                log(`${video.name}: Load started`);
+            });
+            
+            element.addEventListener('canplay', () => {
+                log(`${video.name}: Can play ✅`);
+                updateResult(video.resultId, '✅ Can play', 'success');
+            });
+            
+            element.addEventListener('canplaythrough', () => {
+                log(`${video.name}: Can play through ✅`);
+            });
+            
+            element.addEventListener('loadedmetadata', () => {
+                log(`${video.name}: Metadata loaded`);
+            });
+            
+            element.addEventListener('error', (e) => {
+                const error = e.target.error;
+                const errorMessage = error ? `${error.code}: ${error.message}` : 'Unknown error';
+                log(`${video.name}: Error ❌ - ${errorMessage}`);
+                updateResult(video.resultId, `❌ Error: ${errorMessage}`, 'error');
+            });
+
+            element.addEventListener('loadeddata', () => {
+                log(`${video.name}: Data loaded`);
+            });
+
+            // Try to get video info after a delay
+            setTimeout(() => {
+                try {
+                    const duration = element.duration;
+                    const currentSrc = element.currentSrc;
+                    const readyState = element.readyState;
+                    const networkState = element.networkState;
+                    
+                    log(`${video.name}: Duration=${duration}s, Source=${currentSrc}, ReadyState=${readyState}, NetworkState=${networkState}`);
+                    
+                    if (duration > 0) {
+                        updateResult(video.resultId, `✅ Working - Duration: ${duration}s, Source: ${currentSrc.split('/').pop()}`, 'success');
+                    } else if (readyState === 0) {
+                        updateResult(video.resultId, '❌ No metadata loaded', 'error');
+                    } else {
+                        updateResult(video.resultId, `⚠️ Partial - ReadyState: ${readyState}, NetworkState: ${networkState}`, 'warning');
+                    }
+                } catch (e) {
+                    log(`${video.name}: Could not get info - ${e.message}`);
+                    updateResult(video.resultId, `❌ Error getting info: ${e.message}`, 'error');
+                }
+            }, 3000);
+        });
+
+        // Test file accessibility
+        const testFileAccess = async () => {
+            const fileTestDiv = document.getElementById('file-test');
+            const testFiles = [
+                './assets/videos/1.Lamp 1.mp4',
+                './assets/videos/safari-working/1.Lamp 1.mp4',
+                './assets/videos/webm/1.Lamp 1.webm',
+                './assets/videos/ogv/1.Lamp 1.ogv'
+            ];
+
+            fileTestDiv.innerHTML = '<h4>Testing file accessibility...</h4>';
+
+            for (const file of testFiles) {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    const status = response.status;
+                    const contentType = response.headers.get('content-type');
+                    const contentLength = response.headers.get('content-length');
+                    
+                    log(`File ${file}: Status=${status}, Type=${contentType}, Size=${contentLength}`);
+                    
+                    if (status === 200) {
+                        fileTestDiv.innerHTML += `<div class="test-result success">✅ ${file} - Accessible (${contentLength} bytes)</div>`;
+                    } else {
+                        fileTestDiv.innerHTML += `<div class="test-result error">❌ ${file} - Status: ${status}</div>`;
+                    }
+                } catch (e) {
+                    log(`File ${file}: Error - ${e.message}`);
+                    fileTestDiv.innerHTML += `<div class="test-result error">❌ ${file} - Error: ${e.message}</div>`;
+                }
+            }
+        };
+
+        // Run file accessibility test
+        testFileAccess();
+
+        // Additional Safari-specific tests
+        if (browserName === 'Safari') {
+            log('🔍 Running Safari-specific diagnostics...');
+            
+            // Test if Safari supports specific video features
+            const testVideo = document.createElement('video');
+            log(`Safari supports autoplay: ${testVideo.autoplay}`);
+            log(`Safari supports muted: ${testVideo.muted}`);
+            log(`Safari supports playsInline: ${testVideo.playsInline}`);
+            
+            // Test codec support
+            const canPlayMP4 = testVideo.canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+            const canPlayWebM = testVideo.canPlayType('video/webm; codecs="vp8, vorbis"');
+            const canPlayOGV = testVideo.canPlayType('video/ogg; codecs="theora, vorbis"');
+            
+            log(`Safari MP4 support: ${canPlayMP4}`);
+            log(`Safari WebM support: ${canPlayWebM}`);
+            log(`Safari OGV support: ${canPlayOGV}`);
+        }
+    </script>
+</body>
+</html> 
