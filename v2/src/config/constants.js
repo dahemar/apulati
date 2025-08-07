@@ -47,21 +47,10 @@ export const APP_CONFIG = {
   }
 };
 
-// Función para generar rutas correctas según el entorno
+// Función para generar rutas correctas (ahora simplificada para rutas relativas)
 export const getAssetPath = (path) => {
-  // En desarrollo, usar ruta relativa simple
-  if (import.meta.env.DEV) {
-    return path.startsWith('./') ? path : `./${path}`;
-  }
-  
-  // En producción, usar import de Vite para URLs correctas
-  if (path.startsWith('./assets/')) {
-    // Construir ruta absoluta para producción
-    const cleanPath = path.replace('./', '/');
-    return import.meta.env.BASE_URL + cleanPath.substring(1);
-  }
-  
-  return path;
+  // Usar rutas relativas en todos los entornos
+  return path.startsWith('./') ? path : `./${path}`;
 };
 
 // Rutas de archivos multimedia (rutas base sin procesamiento)

@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GITHUB_PAGES === 'true' ? '/apulati/' : './', // Usar ruta relativa para desarrollo
+  base: './', // Usar ruta relativa para ambos entornos
   server: {
     // Configuración para archivos grandes
     fs: {

@@ -37,29 +37,6 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
-          GITHUB_PAGES: true
-          
-      - name: Prepare GitHub Pages deployment
-        run: |
-          echo "🧹 Preparing GitHub Pages deployment structure"
-          
-          # Create clean deployment structure
-          mkdir -p github-pages-deploy
-          
-          # Copy built application to /apulati/ subdirectory
-          mkdir -p github-pages-deploy/apulati
-          cp -r dist/* github-pages-deploy/apulati/
-          
-          # Add redirect index.html to root
-          cp redirect-index.html github-pages-deploy/index.html
-          
-          # Verify deployment structure
-          echo "📁 Deployment structure:"
-          find github-pages-deploy -type f | head -20
-          echo "📄 Root index.html (redirect):"
-          cat github-pages-deploy/index.html
-          echo "📄 App index.html:"
-          cat github-pages-deploy/apulati/index.html | head -10
           
       - name: List build output
         run: |
@@ -67,27 +44,14 @@ jobs:
           ls -la dist/
           echo "📄 Generated index.html:"
           cat dist/index.html
-          echo "🔍 Checking for main.jsx references:"
-          grep -n "main.jsx" dist/index.html || echo "✅ No main.jsx references found (this is expected)"
-          echo "📂 Assets directory:"
-          ls -la dist/assets/ || echo "No assets directory found"
-          echo "🎭 Public files in build:"
-          find dist/ -name "*.html" -o -name "*.js" -o -name "*.css" | head -10
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        
-      - name: Verify artifact content before upload
-        run: |
-          echo "🔍 Final verification before upload:"
-          echo "Directory exists:" && test -d dist && echo "✅ dist/ exists" || echo "❌ dist/ missing"
-          echo "Index.html exists:" && test -f dist/index.html && echo "✅ index.html exists" || echo "❌ index.html missing"
-          echo "Assets exist:" && test -d dist/assets && echo "✅ assets/ exists" || echo "❌ assets/ missing"
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: github-pages-deploy
+          path: dist
 
   deploy:
     environment:
