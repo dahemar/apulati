@@ -44,6 +44,7 @@ jobs:
           ls -la dist/
           echo "📄 Generated index.html:"
           cat dist/index.html
+          echo "🎯 Deploying via GitHub Actions (not branch)"
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
