@@ -230,8 +230,9 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                           filter: shouldBlur ? 'blur(2px)' : 'none'
                         }}
                       >
-                        {/* Multiple sources for cross-browser compatibility */}
-                        <source src={scene.video} type="video/mp4; codecs='avc1.42E01E, mp4a.40.2'" />
+                        {/* Primary MP4 source - always available */}
+                        <source src={scene.video} type="video/mp4" />
+                        {/* Additional formats - only if they exist */}
                         {scene.webm && <source src={scene.webm} type="video/webm; codecs='vp8, vorbis'" />}
                         {scene.ogv && <source src={scene.ogv} type="video/ogg; codecs='theora, vorbis'" />}
                         {/* Fallback message */}
