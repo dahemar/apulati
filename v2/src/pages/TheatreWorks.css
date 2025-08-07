@@ -44,7 +44,7 @@
   transition: width 0.3s ease; /* Smooth transition when credits panel appears */
   overflow-x: hidden; /* Sin scroll horizontal */
   overflow-y: auto; /* Solo scroll vertical en la sección de video */
-  padding: 0; /* Sin padding para que works-container llene todo el espacio */
+  padding: 0 2rem; /* 32px padding lateral */
   box-sizing: border-box; /* Incluir padding en las dimensiones */
   /* Ensure wheel events are captured */
   pointer-events: auto;
@@ -53,7 +53,7 @@
 /* When credits panel is visible, video section takes 80% */
 .viewer-container.credits-visible .video-section {
   width: 80vw; /* 80% del viewport width para que no se superponga con el panel fijo */
-  padding: 0; /* Sin padding para maximizar el espacio */
+  padding: 0 2rem; /* 32px padding lateral */
   box-sizing: border-box; /* Incluir padding en las dimensiones */
 }
 
@@ -75,13 +75,13 @@
   .video-section {
     width: 100%;
     height: 100%; /* Full height when credits not visible */
-    padding: 0; /* Sin padding también en mobile */
+    padding: 0 2rem; /* 32px padding lateral */
     box-sizing: border-box;
   }
 
   .viewer-container.credits-visible .video-section {
     height: 80%; /* Adjusted height for mobile to match new proportions */
-    padding: 0; /* Sin padding también en mobile */
+    padding: 0 2rem; /* 32px padding lateral */
     box-sizing: border-box;
   }
 }

@@ -84,8 +84,6 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
-  padding: 2rem; /* 32px padding interno */
-  box-sizing: border-box;
 }
 
 .scene-item:hover {

@@ -94,8 +94,6 @@
   border-radius: 8px;
   overflow: hidden;
   background-color: #1a1a1a;
-  padding: 2rem; /* 32px padding interno */
-  box-sizing: border-box;
 }
 
 .scene-item:hover {
