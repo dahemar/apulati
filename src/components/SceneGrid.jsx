@@ -230,11 +230,12 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                           filter: shouldBlur ? 'blur(2px)' : 'none'
                         }}
                       >
-                        {/* Primary MP4 source - always available */}
+                        {/* Try WebM first for Firefox */}
+                        {scene.webm && <source src={scene.webm} type="video/webm" />}
+                        {/* Then OGV for Opera */}
+                        {scene.ogv && <source src={scene.ogv} type="video/ogg" />}
+                        {/* Finally MP4 as fallback for Chrome/Safari */}
                         <source src={scene.video} type="video/mp4" />
-                        {/* Additional formats - only if they exist */}
-                        {scene.webm && <source src={scene.webm} type="video/webm; codecs='vp8, vorbis'" />}
-                        {scene.ogv && <source src={scene.ogv} type="video/ogg; codecs='theora, vorbis'" />}
                         {/* Fallback message */}
                         <p>Tu navegador no soporta el elemento de video.</p>
                       </video>

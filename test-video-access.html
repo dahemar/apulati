@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Access Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .video-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        video {
+            width: 300px;
+            height: 200px;
+            background: #000;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+    </style>
+</head>
+<body>
+    <h1>🎬 Video Access Test</h1>
+    <p>Testing video file accessibility across different formats...</p>
+
+    <div class="video-test">
+        <h3>Test 1: MP4 Format</h3>
+        <video controls>
+            <source src="./assets/videos/1.Lamp 1.mp4" type="video/mp4">
+            <p>MP4 not supported</p>
+        </video>
+        <div class="status success">✅ MP4 should work in Chrome/Safari</div>
+    </div>
+
+    <div class="video-test">
+        <h3>Test 2: WebM Format</h3>
+        <video controls>
+            <source src="./assets/videos/webm/1.Lamp 1.webm" type="video/webm">
+            <p>WebM not supported</p>
+        </video>
+        <div class="status success">✅ WebM should work in Firefox</div>
+    </div>
+
+    <div class="video-test">
+        <h3>Test 3: OGV Format</h3>
+        <video controls>
+            <source src="./assets/videos/ogv/1.Lamp 1.ogv" type="video/ogg">
+            <p>OGV not supported</p>
+        </video>
+        <div class="status success">✅ OGV should work in Opera</div>
+    </div>
+
+    <div class="video-test">
+        <h3>Test 4: Multiple Sources (Cross-Browser)</h3>
+        <video controls>
+            <source src="./assets/videos/webm/1.Lamp 1.webm" type="video/webm">
+            <source src="./assets/videos/ogv/1.Lamp 1.ogv" type="video/ogg">
+            <source src="./assets/videos/1.Lamp 1.mp4" type="video/mp4">
+            <p>No video format supported</p>
+        </video>
+        <div class="status success">✅ Should work in all browsers</div>
+    </div>
+
+    <script>
+        // Test video loading
+        document.querySelectorAll('video').forEach((video, index) => {
+            video.addEventListener('loadstart', () => {
+                console.log(`Video ${index + 1}: Load started`);
+            });
+            
+            video.addEventListener('canplay', () => {
+                console.log(`Video ${index + 1}: Can play`);
+            });
+            
+            video.addEventListener('error', (e) => {
+                console.error(`Video ${index + 1}: Error`, e);
+            });
+        });
+    </script>
+</body>
+</html> 
