@@ -31,6 +31,7 @@ const TheatreWorks = ({ works = [] }) => {
         video: gif,
         webm: work.webm ? work.webm[index] : null,
         ogv: work.ogv ? work.ogv[index] : null,
+        safari: work.safari ? work.safari[index] : null,
         audio: work.audio ? work.audio[index] : null
       })) : []
     }));

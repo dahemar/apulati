@@ -22,16 +22,13 @@ const TheatreWorks = ({ works = [] }) => {
     console.log('🔄 Transforming works data...');
     return works.map(work => ({
       ...work,
-      scenes: work.gifs ? work.gifs.map((gif, index) => {
-        const scene = {
-          video: gif,
-          webm: work.webm ? work.webm[index] : null,
-          ogv: work.ogv ? work.ogv[index] : null,
-          audio: work.audio ? work.audio[index] : null
-        };
-        console.log(`  Scene ${index}:`, scene);
-        return scene;
-      }) : [],
+      scenes: work.gifs ? work.gifs.map((gif, index) => ({
+        video: gif,
+        webm: work.webm ? work.webm[index] : null,
+        ogv: work.ogv ? work.ogv[index] : null,
+        safari: work.safari ? work.safari[index] : null,
+        audio: work.audio ? work.audio[index] : null
+      })) : [],
       credits: work.title === 'Concours de Larmes' ? [
         { role: 'Direction', name: 'Marvin M\'Toumo' },
         { role: 'Acting/Performance', name: 'Elie Autins' },

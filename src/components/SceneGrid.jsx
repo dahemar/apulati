@@ -234,7 +234,9 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                         {scene.webm && <source src={scene.webm} type="video/webm" />}
                         {/* Then OGV for Opera */}
                         {scene.ogv && <source src={scene.ogv} type="video/ogg" />}
-                        {/* Finally MP4 as fallback for Chrome/Safari */}
+                        {/* Then Safari-compatible MP4 */}
+                        {scene.safari && <source src={scene.safari} type="video/mp4" />}
+                        {/* Finally original MP4 as fallback for Chrome/Safari */}
                         <source src={scene.video} type="video/mp4" />
                         {/* Fallback message */}
                         <p>Tu navegador no soporta el elemento de video.</p>
