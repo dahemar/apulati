@@ -5,6 +5,12 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>APULATI - Sound Design for Theatre v2</title>
+    <script>
+      // GitHub Pages fallback: redirect to correct base path if needed
+      if (window.location.hostname === 'dahemar.github.io' && !window.location.pathname.startsWith('/apulati/')) {
+        window.location.href = '/apulati/' + window.location.pathname.substring(1) + window.location.search + window.location.hash;
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
