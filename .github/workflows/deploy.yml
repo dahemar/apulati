@@ -39,6 +39,12 @@ jobs:
           NODE_ENV: production
           GITHUB_PAGES: true
           
+      - name: Remove conflicting index.html from root
+        run: |
+          echo "🗑️ Removing root index.html to avoid conflicts"
+          rm -f index.html
+          echo "✅ Root index.html removed"
+          
       - name: List build output
         run: |
           echo "📁 Build directory contents:"
@@ -47,10 +53,21 @@ jobs:
           cat dist/index.html
           echo "🔍 Checking for main.jsx references:"
           grep -n "main.jsx" dist/index.html || echo "✅ No main.jsx references found (this is expected)"
+          echo "📂 Assets directory:"
+          ls -la dist/assets/ || echo "No assets directory found"
+          echo "🎭 Public files in build:"
+          find dist/ -name "*.html" -o -name "*.js" -o -name "*.css" | head -10
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
+      - name: Verify artifact content before upload
+        run: |
+          echo "🔍 Final verification before upload:"
+          echo "Directory exists:" && test -d dist && echo "✅ dist/ exists" || echo "❌ dist/ missing"
+          echo "Index.html exists:" && test -f dist/index.html && echo "✅ index.html exists" || echo "❌ index.html missing"
+          echo "Assets exist:" && test -d dist/assets && echo "✅ assets/ exists" || echo "❌ assets/ missing"
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
