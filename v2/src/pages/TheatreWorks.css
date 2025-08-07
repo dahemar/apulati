@@ -53,7 +53,7 @@
 /* When credits panel is visible, video section takes 80% */
 .viewer-container.credits-visible .video-section {
   width: 80vw; /* 80% del viewport width para que no se superponga con el panel fijo */
-  padding: 0 2rem 0 0; /* Solo padding izquierdo cuando hay créditos */
+  padding: 0 0 0 2rem; /* Solo padding izquierdo cuando hay créditos */
   box-sizing: border-box; /* Incluir padding en las dimensiones */
 }
 
@@ -81,7 +81,7 @@
 
   .viewer-container.credits-visible .video-section {
     height: 80%; /* Adjusted height for mobile to match new proportions */
-    padding: 0 2rem 0 0; /* Solo padding izquierdo cuando hay créditos */
+    padding: 0 0 0 2rem; /* Solo padding izquierdo cuando hay créditos */
     box-sizing: border-box;
   }
 }
