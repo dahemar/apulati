@@ -49,7 +49,8 @@
 
 /* When credits panel is visible, remove right padding */
 .viewer-container.credits-visible .video-section {
-  padding: 0 0 0 2rem; /* Solo padding izquierdo cuando hay créditos */
+  /* Deja espacio a la derecha igual al ancho del panel de créditos (20% aprox) */
+  padding: 0 calc(20vw + 2rem) 0 2rem;
 }
 
 /* Responsive layout for mobile */

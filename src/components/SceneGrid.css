@@ -71,6 +71,11 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* When credits are visible, add right padding so last item can fully scroll into view */
+.viewer-container.credits-visible .scenes-container {
+  padding-right: calc(20vw + 2rem);
+}
+
 .scenes-container::-webkit-scrollbar {
   display: none;
 }
