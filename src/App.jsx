@@ -4,6 +4,7 @@ import Music from './pages/Music';
 import TheatreWorks from './pages/TheatreWorks';
 import Contact from './pages/Contact';
 import SimpleVideoTest from './components/SimpleVideoTest';
+import DataDebug from './components/DataDebug';
 import { MEDIA_PATHS_RAW } from './config/constants';
 import './App.css';
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/music" element={<Music />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/debug" element={<SimpleVideoTest />} />
+          <Route path="/data-debug" element={<DataDebug />} />
         </Routes>
       </main>
     </div>

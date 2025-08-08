@@ -63,6 +63,89 @@ const TheatreWorks = ({ works = [] }) => {
     }
   };
 
+  // Explicit controls for playback state
+  const startPlayback = () => {
+    safeSetState(setHasUserInteracted, true);
+    safeSetState(setIsPlaying, true);
+  };
+
+  const stopPlayback = () => {
+    safeSetState(setIsPlaying, false);
+  };
+
+  // Start scene playback within user gesture (ensures audio starts)
+  const onStartScenePlayback = (sceneIndex, workIndex) => {
+    try {
+      const targetWorkIndex = typeof workIndex === 'number' ? workIndex : currentWorkIndex;
+      const targetSceneIndex = sceneIndex;
+
+      const targetWork = transformedWorks[targetWorkIndex];
+      const targetScene = targetWork?.scenes?.[targetSceneIndex];
+
+      if (!targetScene) {
+        console.warn('⚠️ onStartScenePlayback: target scene not found', { targetWorkIndex, targetSceneIndex });
+        return;
+      }
+
+      // Update UI state
+      safeSetState(setHasUserInteracted, true);
+      if (targetWorkIndex !== currentWorkIndex) safeSetState(setCurrentWorkIndex, targetWorkIndex);
+      safeSetState(setCurrentSceneIndex, targetSceneIndex);
+
+      // Prepare audio immediately
+      const audio = audioRef.current;
+      if (audio) {
+        try {
+          if (audio.src !== targetScene.audio) {
+            audio.src = targetScene.audio || '';
+            audio.load();
+          }
+        } catch (e) {
+          console.warn('⚠️ Error preparing audio src:', e);
+        }
+      }
+
+      // Set playing state before attempting to play media
+      safeSetState(setIsPlaying, true);
+
+      // Attempt to play audio within user gesture
+      if (audio) {
+        const tryPlayAudio = () => audio.play().catch((err) => console.warn('⚠️ audio.play() failed (will retry on canplay):', err));
+        if (audio.readyState >= 2) {
+          tryPlayAudio();
+        } else {
+          const onAudioCanPlay = () => {
+            audio.removeEventListener('canplay', onAudioCanPlay);
+            tryPlayAudio();
+          };
+          audio.addEventListener('canplay', onAudioCanPlay, { once: true });
+        }
+      }
+
+      // Play the target video after DOM updates
+      setTimeout(() => {
+        const selector = `[data-work-index="${targetWorkIndex}"][data-scene-index="${targetSceneIndex}"] video`;
+        const video = document.querySelector(selector);
+        if (video) {
+          const tryPlayVideo = () => video.play().catch((err) => console.warn('⚠️ video.play() failed (will retry on canplay):', err));
+          if (video.readyState >= 2) {
+            tryPlayVideo();
+          } else {
+            const onVideoCanPlay = () => {
+              video.removeEventListener('canplay', onVideoCanPlay);
+              tryPlayVideo();
+            };
+            video.addEventListener('canplay', onVideoCanPlay, { once: true });
+          }
+        } else {
+          console.warn('⚠️ onStartScenePlayback: video element not found for selector', selector);
+        }
+      }, 50);
+    } catch (e) {
+      console.error('❌ onStartScenePlayback error:', e);
+    }
+  };
+
   // Verificar que works existe y tiene elementos
   if (!works || works.length === 0) {
     return (
@@ -107,7 +190,7 @@ const TheatreWorks = ({ works = [] }) => {
     safeSetState(setHasUserInteracted, false);
   };
 
-  // Set audio source when scene changes
+  // Set audio source when scene changes (fallback path)
   useEffect(() => {
     if (currentSceneIndex !== null && currentWork?.scenes?.[currentSceneIndex]) {
       const scene = currentWork.scenes[currentSceneIndex];
@@ -237,6 +320,8 @@ const TheatreWorks = ({ works = [] }) => {
               currentWorkIndex={currentWorkIndex}
               onWorkChange={handleWorkChange}
               audioRef={audioRef}
+              startPlayback={startPlayback}
+              onStartScenePlayback={onStartScenePlayback}
             />
           </div>
 
