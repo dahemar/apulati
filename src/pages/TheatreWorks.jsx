@@ -71,6 +71,7 @@ const TheatreWorks = ({ works = [] }) => {
 
   const stopPlayback = () => {
     safeSetState(setIsPlaying, false);
+    safeSetState(setHasUserInteracted, false);
   };
 
   // Start scene playback within user gesture (ensures audio starts)
@@ -322,6 +323,7 @@ const TheatreWorks = ({ works = [] }) => {
               audioRef={audioRef}
               startPlayback={startPlayback}
               onStartScenePlayback={onStartScenePlayback}
+              stopPlayback={stopPlayback}
             />
           </div>
 

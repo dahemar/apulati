@@ -21,7 +21,7 @@ const isChromeBrowser = () => {
   return (ua.includes('Chrome') || ua.includes('Chromium')) && !ua.includes('Edg') && !ua.includes('OPR');
 };
 
-const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPause, allWorks, currentWorkIndex, onWorkChange, audioRef, startPlayback, onStartScenePlayback }) => {
+const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPause, allWorks, currentWorkIndex, onWorkChange, audioRef, startPlayback, onStartScenePlayback, stopPlayback }) => {
   const [hoveredScene, setHoveredScene] = useState(null);
   const [hoveredWork, setHoveredWork] = useState(null);
   const containerRef = useRef(null);
@@ -173,6 +173,24 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
 
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
       e.preventDefault();
+
+      // Stop playback immediately when navigating works
+      try {
+        // Pause audio
+        const audio = document.querySelector('audio');
+        if (audio && !audio.paused) audio.pause();
+        // Pause all videos
+        const allVideos = document.querySelectorAll('.scene-item video');
+        allVideos.forEach(v => { if (!v.paused) v.pause(); });
+      } catch (_) {}
+      
+      if (typeof stopPlayback === 'function') {
+        stopPlayback();
+      } else if (typeof onPlayPause === 'function') {
+        // Fallback: toggle play state to false
+        if (isPlaying) onPlayPause();
+      }
+
       const delta = e.deltaY;
       
       if (delta > 0 && currentWorkIndex < allWorks.length - 1) {
@@ -183,15 +201,15 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
         onWorkChange(currentWorkIndex - 1);
       }
     }
-  }, [currentWorkIndex, allWorks.length, onWorkChange]);
+  }, [currentWorkIndex, allWorks.length, onWorkChange, isPlaying, onPlayPause, stopPlayback]);
 
   // Add wheel event listener
   useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false });
+    const target = window;
+    if (target && typeof target.addEventListener === 'function') {
+      target.addEventListener('wheel', handleWheel, { passive: false });
       return () => {
-        container.removeEventListener('wheel', handleWheel);
+        target.removeEventListener('wheel', handleWheel);
       };
     }
   }, [handleWheel]);
