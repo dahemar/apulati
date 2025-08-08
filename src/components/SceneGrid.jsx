@@ -46,36 +46,6 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
     });
   }
 
-  // Ensure a hovered scene is fully visible (not under the credits panel)
-  const ensureSceneFullyVisible = useCallback((sceneItem) => {
-    try {
-      if (!sceneItem || typeof window === 'undefined') return;
-      const creditsEl = document.querySelector('.credits-panel.visible');
-      if (!creditsEl) return; // Nothing to avoid if credits are hidden
-      const container = sceneItem.closest('.scenes-container');
-      if (!container) return;
-
-      const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
-      // Credits panel is 20% width on desktop; use its real clientWidth to be safe
-      const panelWidth = creditsEl.clientWidth || Math.round(viewportWidth * 0.2);
-      const safeRight = viewportWidth - panelWidth - 8; // 8px breathing room
-      const rect = sceneItem.getBoundingClientRect();
-
-      if (rect.right > safeRight) {
-        const delta = rect.right - safeRight;
-        container.scrollBy({ left: delta, behavior: 'smooth' });
-      }
-
-      const safeLeft = 8; // keep a small left margin too
-      if (rect.left < safeLeft) {
-        const deltaLeft = rect.left - safeLeft;
-        container.scrollBy({ left: deltaLeft, behavior: 'smooth' });
-      }
-    } catch (e) {
-      if (DEBUG) console.warn('ensureSceneFullyVisible error:', e);
-    }
-  }, []);
-
   const renderSources = (scene) => {
     const inSafari = isSafariBrowser();
     const inFirefox = isFirefoxBrowser();
@@ -374,10 +344,9 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                       data-scene-index={sceneIndex}
                       data-work-index={workIndex}
                       onClick={() => handleSceneClick(sceneIndex, workIndex)}
-                      onMouseEnter={(e) => {
+                      onMouseEnter={() => {
                         setHoveredScene(sceneIndex);
                         setHoveredWork(workIndex);
-                        ensureSceneFullyVisible(e.currentTarget);
                       }}
                       onMouseLeave={() => {
                         setHoveredScene(null);

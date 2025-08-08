@@ -19,7 +19,7 @@ const TheatreWorks = ({ works = [] }) => {
   const lastAudioSrcRef = useRef(null);
   const audioOperationInProgressRef = useRef(false);
   const audioStateSyncRef = useRef(false);
-  
+
   // Transform works data to include scenes - MEMOIZED with stable dependency
   const transformedWorks = useMemo(() => {
     if (!works || works.length === 0) return [];
@@ -67,7 +67,7 @@ const TheatreWorks = ({ works = [] }) => {
       console.log('🔄 TheatreWorks: Syncing audio state - actual:', actualState, 'react:', isPlaying);
       audioStateSyncRef.current = true;
       safeSetState(setIsPlaying, actualState);
-      setTimeout(() => {
+    setTimeout(() => {
         audioStateSyncRef.current = false;
       }, 100);
     }
@@ -81,7 +81,7 @@ const TheatreWorks = ({ works = [] }) => {
     } catch (error) {
       console.error('🎵 Error checking audio file:', error);
       return false;
-    }
+      }
   };
   
   // Verificar que works existe y tiene elementos
@@ -98,7 +98,7 @@ const TheatreWorks = ({ works = [] }) => {
   }
   
   const currentWork = transformedWorks[currentWorkIndex];
-
+    
   // Handle scene changes
   const handleSceneChange = (sceneIndex) => {
     console.log('🎬 Scene change requested:', sceneIndex, 'current:', currentSceneIndex);
@@ -150,7 +150,7 @@ const TheatreWorks = ({ works = [] }) => {
               
               // Set source and load
               audioRef.current.src = audioSrc;
-              audioRef.current.load();
+      audioRef.current.load();
               lastAudioSrcRef.current = audioSrc;
               console.log('🎵 Audio load() called for new source');
               
@@ -229,12 +229,12 @@ const TheatreWorks = ({ works = [] }) => {
             <VUMeter audioRef={audioRef} />
           )}
         </div>
-      </div>
+        </div>
 
-      <audio
-        ref={audioRef}
-        loop
-        preload="auto"
+        <audio
+          ref={audioRef}
+          loop
+          preload="auto"
         onLoadStart={() => console.log('🎵 Audio loadstart')}
         onCanPlay={() => console.log('🎵 Audio canplay')}
         onCanPlayThrough={() => console.log('🎵 Audio canplaythrough')}
@@ -251,7 +251,7 @@ const TheatreWorks = ({ works = [] }) => {
           console.error('🎵 Audio error:', e);
           syncAudioState();
         }}
-        onEnded={() => {
+          onEnded={() => {
           console.log('🎵 Audio ended');
           syncAudioState();
         }}
@@ -263,8 +263,8 @@ const TheatreWorks = ({ works = [] }) => {
         onAbort={() => {
           console.log('🎵 Audio abort');
           syncAudioState();
-        }}
-      />
+          }}
+        />
     </div>
   );
 };

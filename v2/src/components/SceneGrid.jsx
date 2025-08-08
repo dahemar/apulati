@@ -11,6 +11,7 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
   const isMountedRef = useRef(true);
   const audioOperationInProgressRef = useRef(false);
   const lastAudioSrcRef = useRef(null);
+  const [loadedScenes, setLoadedScenes] = useState(() => new Set());
 
   // Cleanup on unmount
   useEffect(() => {
@@ -208,6 +209,49 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
     }
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = async (e) => {
+      const key = e.key;
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].includes(key)) {
+        e.preventDefault();
+      }
+
+      if (key === 'ArrowRight') {
+        const scenes = allWorks[currentWorkIndex]?.scenes || [];
+        if (!scenes.length) return;
+        const nextScene = currentSceneIndex === null ? 0 : (currentSceneIndex + 1) % scenes.length;
+        await handleSceneClick(nextScene, currentWorkIndex);
+      } else if (key === 'ArrowLeft') {
+        const scenes = allWorks[currentWorkIndex]?.scenes || [];
+        if (!scenes.length) return;
+        const prevScene = currentSceneIndex === null ? 0 : (currentSceneIndex - 1 + scenes.length) % scenes.length;
+        await handleSceneClick(prevScene, currentWorkIndex);
+      } else if (key === 'ArrowDown') {
+        const nextIndex = (currentWorkIndex + 1) % allWorks.length;
+        pauseAllVideos();
+        await pauseAudio();
+        onWorkChange(nextIndex);
+      } else if (key === 'ArrowUp') {
+        const prevIndex = currentWorkIndex === 0 ? allWorks.length - 1 : currentWorkIndex - 1;
+        pauseAllVideos();
+        await pauseAudio();
+        onWorkChange(prevIndex);
+      } else if (key === ' ') {
+        if (currentSceneIndex === null) {
+          const scenes = allWorks[currentWorkIndex]?.scenes || [];
+          if (!scenes.length) return;
+          await handleSceneClick(0, currentWorkIndex);
+        } else {
+          onPlayPause();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentSceneIndex, currentWorkIndex, allWorks.length, isPlaying]);
+
   // Handle wheel event for vertical work navigation
   const handleWheel = (e) => {
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -291,8 +335,92 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
     return actualState && currentSceneIndex !== null;
   };
 
+  // Helper to compute dynamic blur/brightness
+  const computeFilterStyle = (workIndex, sceneIndex, isActive, isHovered) => {
+    if (isActive || isHovered) {
+      return 'none';
+    }
+    // Stronger blur for non-current works
+    if (workIndex !== currentWorkIndex) {
+      return 'blur(4px) brightness(0.5)';
+    }
+    // Dynamic blur relative to hovered scene within current work
+    if (hoveredScene !== null && hoveredWork === currentWorkIndex) {
+      const distance = Math.abs(sceneIndex - hoveredScene);
+      const blur = Math.min(6, 1 + distance * 2);
+      const brightness = Math.max(0.4, 0.9 - distance * 0.2);
+      return `blur(${blur}px) brightness(${brightness})`;
+    }
+    // Default slight blur
+    return 'blur(2px) brightness(0.7)';
+  };
+
+  // Mark scene as loaded
+  const markLoaded = (key) => {
+    setLoadedScenes(prev => {
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  };
+
+  // Lazy video component per scene
+  const SceneVideo = ({ scene, sceneKey, isActive, isHovered, filterStyle }) => {
+    const videoRef = useRef(null);
+    const [isInView, setIsInView] = useState(false);
+
+    useEffect(() => {
+      const el = videoRef.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setIsInView(true);
+            }
+          });
+        },
+        { root: containerRef.current, rootMargin: '200px', threshold: 0.01 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+    }, []);
+
+    const isLoaded = loadedScenes.has(sceneKey);
+
+    return (
+      <div className="scene-video-container">
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload={isInView ? 'metadata' : 'none'}
+          className="scene-video"
+          style={{ filter: filterStyle }}
+          onLoadedData={() => markLoaded(sceneKey)}
+        >
+          {isInView && (
+            <>
+              {scene.webm && <source src={scene.webm} type="video/webm" />}
+              {scene.ogv && <source src={scene.ogv} type="video/ogg" />}
+              {scene.safari && <source src={scene.safari} type="video/mp4" />}
+              <source src={scene.video} type="video/mp4" />
+            </>
+          )}
+          <p>Tu navegador no soporta el elemento de video.</p>
+        </video>
+        {!isLoaded && (
+          <div className="loading-indicator" aria-hidden="true">
+            <div className="spinner" />
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="scene-grid" ref={containerRef}>
+    <div className="scene-grid" ref={containerRef} tabIndex={0}>
       <div className="works-container">
         {allWorks.map((workItem, workIndex) => {
           const isCurrentWork = workIndex === currentWorkIndex;
@@ -316,8 +444,9 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                 {workItem.scenes && workItem.scenes.map((scene, sceneIndex) => {
                   const isActive = workIndex === currentWorkIndex && sceneIndex === currentSceneIndex;
                   const isHovered = workIndex === hoveredWork && sceneIndex === hoveredScene;
-                  const shouldBlur = !isActive && !isHovered;
+                  const filterStyle = computeFilterStyle(workIndex, sceneIndex, isActive, isHovered);
                   const isActuallyPlaying = getButtonState();
+                  const sceneKey = `${workIndex}-${sceneIndex}`;
                   
                   return (
                     <div
@@ -336,27 +465,13 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                         safeSetState(setHoveredWork, null);
                       }}
                     >
-                      <video
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        className="scene-video"
-                        style={{
-                          filter: shouldBlur ? 'blur(2px)' : 'none'
-                        }}
-                      >
-                        {/* Try WebM first for Firefox */}
-                        {scene.webm && <source src={scene.webm} type="video/webm" />}
-                        {/* Then OGV for Opera */}
-                        {scene.ogv && <source src={scene.ogv} type="video/ogg" />}
-                        {/* Then Safari-compatible MP4 */}
-                        {scene.safari && <source src={scene.safari} type="video/mp4" />}
-                        {/* Finally original MP4 as fallback for Chrome/Safari */}
-                        <source src={scene.video} type="video/mp4" />
-                        {/* Fallback message */}
-                        <p>Tu navegador no soporta el elemento de video.</p>
-                      </video>
+                      <SceneVideo
+                        scene={scene}
+                        sceneKey={sceneKey}
+                        isActive={isActive}
+                        isHovered={isHovered}
+                        filterStyle={filterStyle}
+                      />
                       
                       <div 
                         className="play-pause-button"
