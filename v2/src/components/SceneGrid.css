@@ -111,6 +111,7 @@
 /* Extra padding when credits panel is visible */
 .viewer-container.credits-visible .scenes-container {
   padding-right: 6rem; /* Extra padding derecho para evitar solapamiento con panel */
+  max-width: calc(100vw - 22vw); /* Limita el carril al ancho disponible sin el panel */
 }
 
 /* Ensure last scene is fully scrollable when credits visible */

@@ -1,18 +1,18 @@
 .credits-panel {
-  width: 22vw; /* Aumentado ligeramente de 20vw a 22vw para balance */
-  height: calc(100vh - 80px); /* Altura completa menos el menú más ancho */
+  width: 22vw; /* fijo y consistente con el cálculo del video-section */
+  height: calc(100vh - 80px);
   background-color: #1a1a1a;
   border-left: 1px solid #333;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 80px; /* Debajo del menú más ancho */
+  top: 80px;
   right: 0;
-  z-index: 1500; /* Debajo del menú pero encima del contenido */
-  overflow-y: auto; /* Allow internal scrolling within credits only */
-  /* Prevent wheel events from propagating to video section */
+  z-index: 3000; /* por encima del contenido */
+  overflow-y: auto;
   pointer-events: auto;
+  box-shadow: -12px 0 24px rgba(0,0,0,0.35); /* separación visual */
 }
 
 .credits-content {
