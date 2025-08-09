@@ -50,10 +50,10 @@
   pointer-events: auto;
 }
 
-/* When credits panel is visible, video section takes 75% */
+/* When credits panel is visible, video section takes 72% */
 .viewer-container.credits-visible .video-section {
-  width: 75vw; /* Reducido de 80vw a 75vw para dar más espacio */
-  padding: 0 3rem 0 2rem; /* Padding derecho aumentado para separar del panel */
+  width: 72vw; /* Reducido de 75vw a 72vw para dar aún más espacio */
+  padding: 0 4rem 0 2rem; /* Padding derecho aumentado a 4rem */
   box-sizing: border-box; /* Incluir padding en las dimensiones */
 }
 

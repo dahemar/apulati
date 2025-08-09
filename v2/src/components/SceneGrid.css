@@ -108,6 +108,19 @@
   flex-shrink: 1; /* Allow container to shrink */
 }
 
+/* Extra padding when credits panel is visible */
+.viewer-container.credits-visible .scenes-container {
+  padding-right: 6rem; /* Extra padding derecho para evitar solapamiento con panel */
+}
+
+/* Ensure last scene is fully scrollable when credits visible */
+.viewer-container.credits-visible .scenes-container::after {
+  content: '';
+  flex-shrink: 0;
+  width: 8rem; /* Espacio adicional después del último video */
+  height: 1px;
+}
+
 .scenes-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
