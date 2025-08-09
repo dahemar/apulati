@@ -215,6 +215,7 @@ const TheatreWorks = ({ works = [] }) => {
                 safeSetState(setHasUserInteracted, false);
               }}
               audioRef={audioRef}
+              creditsVisible={hasUserInteracted}
             />
           </div>
 

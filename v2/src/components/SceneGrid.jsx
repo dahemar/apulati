@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './SceneGrid.css';
 
-const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPause, allWorks, currentWorkIndex, onWorkChange, audioRef }) => {
+const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPause, allWorks, currentWorkIndex, onWorkChange, audioRef, creditsVisible = false }) => {
   console.log('🎬 SceneGrid render - currentWorkIndex:', currentWorkIndex, 'currentSceneIndex:', currentSceneIndex, 'isPlaying:', isPlaying);
   
   const [hoveredScene, setHoveredScene] = useState(null);
@@ -440,7 +440,10 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
               key={workIndex} 
               className={`work-row ${positionClass}`}
             >
-              <div className="scenes-container">
+              <div
+                className="scenes-container"
+                style={creditsVisible ? { paddingRight: 'calc(22vw + 32px)' } : undefined}
+              >
                 {workItem.scenes && workItem.scenes.map((scene, sceneIndex) => {
                   const isActive = workIndex === currentWorkIndex && sceneIndex === currentSceneIndex;
                   const isHovered = workIndex === hoveredWork && sceneIndex === hoveredScene;
@@ -498,6 +501,9 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                     </div>
                   );
                 })}
+                {creditsVisible && (
+                  <div style={{ flexShrink: 0, width: 'calc(22vw + 32px)', height: 1 }} />
+                )}
               </div>
             </div>
           );
