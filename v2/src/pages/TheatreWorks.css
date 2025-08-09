@@ -50,10 +50,10 @@
   pointer-events: auto;
 }
 
-/* When credits panel is visible, video section takes 80% */
+/* When credits panel is visible, video section takes 75% */
 .viewer-container.credits-visible .video-section {
-  width: 80vw; /* 80% del viewport width para que no se superponga con el panel fijo */
-  padding: 0 0 0 2rem; /* Solo padding izquierdo cuando hay créditos */
+  width: 75vw; /* Reducido de 80vw a 75vw para dar más espacio */
+  padding: 0 3rem 0 2rem; /* Padding derecho aumentado para separar del panel */
   box-sizing: border-box; /* Incluir padding en las dimensiones */
 }
 
@@ -80,8 +80,8 @@
   }
 
   .viewer-container.credits-visible .video-section {
-    height: 80%; /* Adjusted height for mobile to match new proportions */
-    padding: 0 0 0 2rem; /* Solo padding izquierdo cuando hay créditos */
+    height: 75%; /* Reducido de 80% a 75% para consistencia */
+    padding: 0 2rem 0 2rem; /* Padding balanceado para móvil */
     box-sizing: border-box;
   }
 }
