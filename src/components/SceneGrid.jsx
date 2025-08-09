@@ -353,44 +353,46 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
                         setHoveredWork(null);
                       }}
                     >
-                      <video
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        className="scene-video"
-                        style={{
-                          filter: filterValue,
-                          opacity: opacityValue
-                        }}
-                        onLoadStart={() => {
-                          if (DEBUG) console.log(`🎬 Video ${sceneIndex} loadstart - sources:`, { webm: scene.webm, ogv: scene.ogv, safari: scene.safari, video: scene.video });
-                        }}
-                        onCanPlay={() => {
-                          if (DEBUG) console.log(`🎬 Video ${sceneIndex} canplay - currentSrc:`, document.querySelector(`[data-work-index="${workIndex}"][data-scene-index="${sceneIndex}"] video`)?.currentSrc);
-                        }}
-                        onError={(e) => {
-                          console.error(`🎬 Video ${sceneIndex} error:`, e.target.error);
-                          console.error(`🎬 Video ${sceneIndex} error details:`, { code: e.target.error?.code, message: e.target.error?.message, currentSrc: e.target.currentSrc });
-                        }}
-                        onLoadedMetadata={(e) => {
-                          const el = e.currentTarget;
-                          try {
-                            if (el && el.readyState >= 1) {
-                              const originalTime = el.currentTime;
-                              el.currentTime = Math.min(0.01, el.duration || 0.01);
-                              el.pause();
-                              el.currentTime = originalTime;
-                            }
-                          } catch (err) {
-                            if (DEBUG) console.warn('⚠️ onLoadedMetadata seek workaround failed:', err);
-                          }
-                          if (DEBUG) console.log(`🎬 Video ${sceneIndex} loadedmetadata - duration:`, document.querySelector(`[data-work-index="${workIndex}"][data-scene-index="${sceneIndex}"] video`)?.duration);
-                        }}
-                        onLoadedData={() => {
-                          if (DEBUG) console.log(`🎬 Video ${sceneIndex} loadeddata`);
-                        }}
-                      >
+                                            <video
+                         muted
+                                                  loop
+                          autoPlay
+                          playsInline
+                          webkit-playsinline
+                         preload="auto"
+                         className="scene-video"
+                         style={{
+                           filter: filterValue,
+                           opacity: opacityValue
+                         }}
+                         onLoadStart={() => {
+                           if (DEBUG) console.log(`🎬 Video ${sceneIndex} loadstart - sources:`, { webm: scene.webm, ogv: scene.ogv, safari: scene.safari, video: scene.video });
+                         }}
+                         onCanPlay={() => {
+                           if (DEBUG) console.log(`🎬 Video ${sceneIndex} canplay - currentSrc:`, document.querySelector(`[data-work-index="${workIndex}"][data-scene-index="${sceneIndex}"] video`)?.currentSrc);
+                         }}
+                         onError={(e) => {
+                           console.error(`🎬 Video ${sceneIndex} error:`, e.target.error);
+                           console.error(`🎬 Video ${sceneIndex} error details:`, { code: e.target.error?.code, message: e.target.error?.message, currentSrc: e.target.currentSrc });
+                         }}
+                         onLoadedMetadata={(e) => {
+                           const el = e.currentTarget;
+                           try {
+                             if (el && el.readyState >= 1) {
+                               const originalTime = el.currentTime;
+                               el.currentTime = Math.min(0.01, el.duration || 0.01);
+                               el.pause();
+                               el.currentTime = originalTime;
+                             }
+                           } catch (err) {
+                             if (DEBUG) console.warn('⚠️ onLoadedMetadata seek workaround failed:', err);
+                           }
+                           if (DEBUG) console.log(`🎬 Video ${sceneIndex} loadedmetadata - duration:`, document.querySelector(`[data-work-index="${workIndex}"][data-scene-index="${sceneIndex}"] video`)?.duration);
+                         }}
+                         onLoadedData={() => {
+                           if (DEBUG) console.log(`🎬 Video ${sceneIndex} loadeddata`);
+                         }}
+                       >
                         {renderSources(scene)}
                         <p>Tu navegador no soporta el elemento de video.</p>
                       </video>

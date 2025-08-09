@@ -56,6 +56,35 @@ const TheatreWorks = ({ works = [] }) => {
     };
   }, []);
 
+  // One-time iOS Safari bootstrap: play all muted videos on first user gesture
+  useEffect(() => {
+    const bootstrapAutoplay = () => {
+      const videos = document.querySelectorAll('.scene-item video');
+      videos.forEach((video) => {
+        try {
+          video.muted = true;
+          if (video.paused) {
+            video.play().catch(() => {});
+          }
+        } catch (_) {}
+      });
+    };
+
+    const onceHandler = () => {
+      bootstrapAutoplay();
+      window.removeEventListener('touchend', onceHandler);
+      window.removeEventListener('click', onceHandler);
+    };
+
+    window.addEventListener('touchend', onceHandler, { passive: true });
+    window.addEventListener('click', onceHandler);
+
+    return () => {
+      window.removeEventListener('touchend', onceHandler);
+      window.removeEventListener('click', onceHandler);
+    };
+  }, []);
+
   // Function to safely update state only if component is still mounted
   const safeSetState = (setter, value) => {
     if (isMountedRef.current) {

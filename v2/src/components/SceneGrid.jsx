@@ -390,16 +390,18 @@ const SceneGrid = ({ work, currentSceneIndex, onSceneChange, isPlaying, onPlayPa
 
     return (
       <div className="scene-video-container">
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          preload={isInView ? 'metadata' : 'none'}
-          className="scene-video"
-          style={{ filter: filterStyle }}
-          onLoadedData={() => markLoaded(sceneKey)}
-        >
+                <video
+           ref={videoRef}
+           muted
+           loop
+           autoPlay
+           playsInline
+           webkit-playsinline
+           preload={isInView ? 'metadata' : 'none'}
+           className="scene-video"
+           style={{ filter: filterStyle }}
+           onLoadedData={() => markLoaded(sceneKey)}
+         >
           {isInView && (
             <>
               {scene.webm && <source src={scene.webm} type="video/webm" />}
