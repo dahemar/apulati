@@ -52,8 +52,8 @@
 
 /* When credits panel is visible, video section accounts for credits width */
 .viewer-container.credits-visible .video-section {
-  width: calc(100vw - 22vw); /* Resta el ancho del panel de créditos */
-  margin-right: 22vw; /* Reserva espacio a la derecha para el panel fijo */
+  margin-right: calc(22vw + 32px); /* deja un hueco fijo de 32px más el panel */
+  width: calc(100vw - 22vw - 32px); /* resta panel + gap visible */
   padding: 0 2rem; /* Padding lateral consistente */
   box-sizing: border-box;
 }

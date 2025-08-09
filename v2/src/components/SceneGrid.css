@@ -110,15 +110,15 @@
 
 /* Extra padding when credits panel is visible */
 .viewer-container.credits-visible .scenes-container {
-  padding-right: calc(22vw + 2rem + 32px); /* Extra 32px free space */
-  max-width: calc(100vw - 22vw); /* Limita el carril al ancho disponible sin el panel */
+  padding-right: calc(22vw + 32px); /* clearance = ancho panel + 32px */
+  max-width: calc(100vw - 22vw - 32px); /* carril limitado al espacio disponible real */
 }
 
 /* Ensure last scene is fully scrollable when credits visible */
 .viewer-container.credits-visible .scenes-container::after {
   content: '';
   flex-shrink: 0;
-  width: calc(22vw + 2rem + 32px); /* Spacer = credits width + margin + 32px */
+  width: calc(22vw + 32px); /* spacer igual al clearance visible */
   height: 1px;
 }
 
