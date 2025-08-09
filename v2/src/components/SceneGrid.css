@@ -110,7 +110,7 @@
 
 /* Extra padding when credits panel is visible */
 .viewer-container.credits-visible .scenes-container {
-  padding-right: 6rem; /* Extra padding derecho para evitar solapamiento con panel */
+  padding-right: calc(22vw + 2rem); /* Clearance equal to credits width plus margin */
   max-width: calc(100vw - 22vw); /* Limita el carril al ancho disponible sin el panel */
 }
 
@@ -118,7 +118,7 @@
 .viewer-container.credits-visible .scenes-container::after {
   content: '';
   flex-shrink: 0;
-  width: 8rem; /* Espacio adicional después del último video */
+  width: calc(22vw + 2rem); /* Spacer equal to credits width + margin */
   height: 1px;
 }
 
