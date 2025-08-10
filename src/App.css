@@ -24,6 +24,11 @@ html, body {
   box-sizing: border-box;
 }
 
+/* Estabiliza el ancho del viewport entre rutas para evitar saltos de navegación */
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
 body {
   font-family: Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -32,6 +37,8 @@ body {
   color: #ffffff;
   line-height: 1.6;
   text-transform: lowercase;
+  /* Reserva espacio del scrollbar vertical en todas las páginas */
+  overflow-y: scroll;
 }
 
 .App {
@@ -108,7 +115,6 @@ body {
 .nav-link:hover::after {
   width: 100%;
 }
-
 
 
 
